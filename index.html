@@ -444,11 +444,12 @@
         <div class="field">
           <label>Annual Gross Salary</label>
           <div class="input-prefix"><span>$</span>
-            <input type="number" id="salary" value="120000" min="30000" max="500000" step="1000" onchange="calculate()">
+            <input type="number" id="salary" value="120000" min="30000" max="500000" step="1000"
+              oninput="inputToSlider('salary','salarySlider')" onchange="inputToSlider('salary','salarySlider')">
           </div>
           <div class="slider-wrap">
             <input type="range" id="salarySlider" min="40000" max="300000" step="1000" value="120000"
-              oninput="syncSlider('salary','salarySlider'); calculate()">
+              oninput="sliderToInput('salarySlider','salary')">
             <div class="slider-labels"><span>$40k</span><span>$300k</span></div>
           </div>
         </div>
@@ -502,11 +503,12 @@
         <div class="field">
           <label>Vehicle Drive Away Price</label>
           <div class="input-prefix"><span>$</span>
-            <input type="number" id="carPrice" value="59990" min="15000" max="200000" step="500" onchange="calculate()">
+            <input type="number" id="carPrice" value="59990" min="15000" max="200000" step="500"
+              oninput="inputToSlider('carPrice','carPriceSlider')" onchange="inputToSlider('carPrice','carPriceSlider')">
           </div>
           <div class="slider-wrap">
             <input type="range" id="carPriceSlider" min="20000" max="150000" step="500" value="59990"
-              oninput="syncSlider('carPrice','carPriceSlider'); calculate()">
+              oninput="sliderToInput('carPriceSlider','carPrice')">
             <div class="slider-labels"><span>$20k</span><span>$150k</span></div>
           </div>
         </div>
@@ -780,8 +782,15 @@ function applyPreset() {
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────
-function syncSlider(inputId, sliderId) {
+// Slider → Input (called from range oninput)
+function sliderToInput(sliderId, inputId) {
+  document.getElementById(inputId).value = document.getElementById(sliderId).value;
+  calculate();
+}
+// Input → Slider (called from number input onchange/oninput)
+function inputToSlider(inputId, sliderId) {
   document.getElementById(sliderId).value = document.getElementById(inputId).value;
+  calculate();
 }
 function setKm(val, btn) {
   document.getElementById('km').value = val;
@@ -832,9 +841,6 @@ function calculate() {
   const servicing   = +document.getElementById('servicing').value;
   const electricity = +document.getElementById('electricity').value;
   const adminFee    = +document.getElementById('adminFee').value;
-
-  document.getElementById('salarySlider').value = salary;
-  document.getElementById('carPriceSlider').value = carPrice;
 
   const gstExPrice   = carPrice / 1.1;
   const residualVal  = gstExPrice * residualPct;
