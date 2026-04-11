@@ -407,6 +407,32 @@
     text-align: center; font-size: 11px; color: var(--text-soft);
     margin-top: 40px; padding: 0 20px; line-height: 1.6;
   }
+
+  /* ── BUY ME A COFFEE ─────────────────────────────────────────────── */
+  .bmc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #FFDD00;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 15px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(255,221,0,0.35);
+    line-height: 1;
+  }
+  .bmc-btn:hover {
+    background: #FFE833;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(255,221,0,0.5);
+  }
 </style>
 </head>
 <body>
@@ -424,6 +450,9 @@
       </div>
     </div>
     <div class="header-right">
+      <a class="bmc-btn" href="https://buymeacoffee.com/schoi0209" target="_blank" rel="noopener">
+        ☕ Buy me a coffee
+      </a>
       <button class="cursor-toggle active" onclick="toggleCursor()" id="cursorBtn">🌀 Tubes On</button>
       <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
     </div>
