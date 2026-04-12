@@ -5,16 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EV Novated Lease Calculator — NSW</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ── TUBES CURSOR BASE ───────────────────────────────────────────── */
-  #tubes-canvas {
-    position: fixed;
-    top: 0; right: 0; bottom: 0; left: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
 
   /* ── THEME VARS ──────────────────────────────────────────────────── */
   :root {
@@ -65,7 +57,6 @@
     color: var(--text);
     min-height: 100vh;
     transition: background 0.3s, color 0.3s;
-    touch-action: none; /* for tubes cursor */
   }
 
   /* ── PAGE WRAPPER (above canvas) ─────────────────────────────────── */
@@ -125,23 +116,6 @@
     backdrop-filter: var(--backdrop);
   }
   .theme-toggle:hover { background: var(--border); }
-  .cursor-toggle {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text);
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .cursor-toggle:hover { background: var(--border); }
-  .cursor-toggle.active {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-light);
-  }
 
   /* ── MAIN LAYOUT ─────────────────────────────────────────────────── */
   main { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
@@ -437,9 +411,6 @@
 </head>
 <body>
 
-<!-- ── TUBES CURSOR CANVAS ────────────────────────────────────────── -->
-<canvas id="tubes-canvas"></canvas>
-
 <div id="page-wrap">
   <header>
     <div class="header-left">
@@ -453,8 +424,7 @@
       <a class="bmc-btn" href="https://buymeacoffee.com/schoi0209" target="_blank" rel="noopener">
         ☕ Buy me a coffee
       </a>
-      <button class="cursor-toggle active" onclick="toggleCursor()" id="cursorBtn">🌀 Tubes On</button>
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
     </div>
   </header>
 
@@ -702,65 +672,9 @@
       </div>
     </div>
 
-    <p class="disclaimer">⚡ EV Novated Lease Calculator · NSW FY2024–25 · Figures are estimates based on ATO tax rates and FBT rules. Not financial advice.<br>
-    🌀 Tubes Cursor effect by <a href="https://codepen.io/soju22/pen/qEbdVjK" target="_blank" style="color:var(--accent2)">Kevin Levron</a> via threejs-components · Licence CC BY-NC-SA 4.0</p>
+    <p class="disclaimer">⚡ EV Novated Lease Calculator · NSW FY2024–25 · Figures are estimates based on ATO tax rates and FBT rules. Not financial advice.<br></p>
   </main>
 </div>
-
-<!-- ── TUBES CURSOR (ESM) ─────────────────────────────────────────── -->
-<script type="module">
-  import TubesCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js";
-
-  let tubesApp = null;
-  let tubesEnabled = true;
-
-  function initTubes() {
-    try {
-      tubesApp = TubesCursor(document.getElementById('tubes-canvas'), {
-        tubes: {
-          colors: ["#34c66e", "#4a9eff", "#e8b84b"],
-          lights: {
-            intensity: 200,
-            colors: ["#34c66e", "#4a9eff", "#ff6b9d", "#e8b84b"]
-          }
-        }
-      });
-
-      // Click to randomise colours
-      document.body.addEventListener('click', (e) => {
-        if (!tubesEnabled || !tubesApp) return;
-        // Don't randomise when clicking inputs/buttons
-        if (e.target.closest('input,select,button,a,label')) return;
-        const colors = randomColors(3);
-        const lightsColors = randomColors(4);
-        tubesApp.tubes.setColors(colors);
-        tubesApp.tubes.setLightsColors(lightsColors);
-      });
-
-    } catch(err) {
-      console.warn('Tubes cursor failed to init:', err);
-    }
-  }
-
-  function randomColors(count) {
-    return new Array(count).fill(0)
-      .map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
-  }
-
-  // Expose toggle to global scope
-  window._tubesToggle = () => {
-    tubesEnabled = !tubesEnabled;
-    const canvas = document.getElementById('tubes-canvas');
-    if (tubesEnabled) {
-      canvas.style.display = '';
-      if (!tubesApp) initTubes();
-    } else {
-      canvas.style.display = 'none';
-    }
-  };
-
-  initTubes();
-</script>
 
 <script>
 // ── THEME ──────────────────────────────────────────────────────────
@@ -778,16 +692,6 @@ function toggleTheme() {
 function updateThemeBtn() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
-}
-
-// ── CURSOR TOGGLE ──────────────────────────────────────────────────
-let cursorOn = true;
-function toggleCursor() {
-  cursorOn = !cursorOn;
-  const btn = document.getElementById('cursorBtn');
-  btn.textContent = cursorOn ? '🌀 Tubes On' : '🌀 Tubes Off';
-  btn.classList.toggle('active', cursorOn);
-  if (window._tubesToggle) window._tubesToggle();
 }
 
 // ── VEHICLE PRESETS ────────────────────────────────────────────────
