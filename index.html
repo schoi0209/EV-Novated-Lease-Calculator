@@ -284,6 +284,13 @@
   }
   .total-row .num { color: var(--text); font-size: 15px; font-weight: 500; }
 
+  .total-row.sub { margin-top: 8px; padding-top: 0; border-top: 0; font-size: 12.5px; color: var(--text-3); }
+  .total-row.sub .num { font-size: 13px; color: var(--accent-strong); }
+  .pill.soft { color: var(--text-2); background: var(--surface-2); border: 1px solid var(--border); }
+  .pill.warn { color: var(--amber); background: var(--amber-soft); }
+  .panel-foot { font-size: 12.5px; color: var(--text-2); padding: 10px 0 10px; border-top: 1px dashed color-mix(in srgb, var(--accent) 30%, transparent); }
+  #phaseSeg button { font-size: 12.5px; }
+
   /* ── EV PLAN PROMO ──────────────────────────────────────────────── */
   .promo {
     display: grid; grid-template-columns: auto 1fr auto; gap: 6px 14px; align-items: center;
@@ -460,7 +467,7 @@
       </span>
       <span>
         <span class="brand-name" style="display:block">EV Novated Lease Calculator</span>
-        <span class="brand-sub" style="display:block">NSW · FY2024–25 · FBT exempt</span>
+        <span class="brand-sub" style="display:block">NSW · FY2026–27 · ATO rates</span>
       </span>
     </a>
     <div class="actions">
@@ -475,7 +482,7 @@
 
 <main>
   <section class="hero">
-    <span class="eyebrow"><span class="dot"></span>Zero FBT for EVs under $89,332</span>
+    <span class="eyebrow"><span class="dot"></span>Updated for FY2026–27 · Full EV FBT exemption until 31 March 2027</span>
     <h1>Is an EV novated lease <span class="grad">worth it?</span></h1>
     <p class="lede">See the real tax saving from salary-packaging an electric vehicle in NSW — including the FBT exemption for eligible EVs — side by side with a standard car loan.</p>
   </section>
@@ -487,11 +494,11 @@
       <section class="card">
         <div class="card-head">
           <span class="step">1</span>
-          <div><h2>Your salary &amp; tax</h2><p>Used to work out your marginal tax rate.</p></div>
+          <div><h2>Your salary &amp; tax</h2><p>2026–27 ATO resident tax rates, LITO and Medicare levy.</p></div>
         </div>
         <div class="note">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          <span><strong>FBT exemption 2024–25:</strong> eligible EVs under $89,332 (the luxury car tax threshold) pay no FBT when novated leased — a major advantage over petrol cars.</span>
+          <span><strong>Electric Car Discount:</strong> battery-electric cars under the luxury car tax threshold ($91,661 in 2026–27) pay no FBT when novated leased. Under proposed changes, from 1 April 2027 the full exemption only applies to EVs costing $75,000 or less. Pick your lease start date in step 2.</span>
         </div>
         <div class="field">
           <div class="field-row"><label for="salary">Annual gross salary</label></div>
@@ -535,30 +542,40 @@
       <section class="card">
         <div class="card-head">
           <span class="step">2</span>
-          <div><h2>Your EV</h2><p>Pick a popular model or enter your own price.</p></div>
+          <div><h2>Your EV</h2><p>Battery-electric only. Plug-in hybrids lost the exemption for new leases from 1 April 2025.</p></div>
         </div>
         <div class="field">
           <div class="field-row"><label for="vehiclePreset">Vehicle</label><span class="pill" id="fbtPill">✓ FBT exempt</span></div>
           <select id="vehiclePreset">
             <option value="custom">Custom / enter manually</option>
-            <option value="tesla3" selected>Tesla Model 3 RWD (~$60k)</option>
-            <option value="teslaY">Tesla Model Y AWD (~$72k)</option>
-            <option value="bzx4">BYD Atto 3 (~$47k)</option>
-            <option value="polestar2">Polestar 2 (~$65k)</option>
-            <option value="ioniq6">Hyundai IONIQ 6 (~$59k)</option>
-            <option value="kiaev6">Kia EV6 (~$68k)</option>
-            <option value="mercedeseqa">Mercedes EQA (~$80k)</option>
-            <option value="bmwi4">BMW i4 (~$88k)</option>
+            <option value="atto3">BYD Atto 3 Evo (from $41,990)</option>
+            <option value="tesla3" selected>Tesla Model 3 RWD (from $45,900)</option>
+            <option value="sealion7">BYD Sealion 7 Premium (from $54,990)</option>
+            <option value="kiaev5">Kia EV5 Air (from $56,770)</option>
+            <option value="teslaY">Tesla Model Y RWD (from $58,900)</option>
+            <option value="kiaev6">Kia EV6 (from $72,800)</option>
+            <option value="teslaYL">Tesla Model Y L (from $74,900)</option>
           </select>
         </div>
         <div class="field">
           <div class="field-row"><label for="carPrice">Drive-away price</label></div>
           <div class="control">
             <span class="affix pre">$</span>
-            <input type="number" id="carPrice" value="59990" min="15000" max="200000" step="500" inputmode="numeric">
+            <input type="number" id="carPrice" value="45900" min="15000" max="200000" step="500" inputmode="numeric">
           </div>
-          <input type="range" id="carPriceSlider" min="20000" max="150000" step="500" value="59990" aria-label="Drive-away price">
+          <input type="range" id="carPriceSlider" min="20000" max="150000" step="100" value="45900" aria-label="Drive-away price">
           <div class="range-scale"><span>$20k</span><span>$150k</span></div>
+          <div class="hint">Presets are list prices before on-road costs (Nov 2026). Enter your dealer quote for accuracy.</div>
+        </div>
+        <div class="field">
+          <div class="field-row"><span class="label">Lease start (commitment date)</span><span class="pill soft" id="phasePill">Current law</span></div>
+          <div class="seg" id="phaseSeg" role="group" aria-label="Lease start">
+            <button type="button" data-val="1" class="active">Before 1 Apr 2027</button>
+            <button type="button" data-val="2">Apr 2027 – Mar 2029</button>
+            <button type="button" data-val="3">From Apr 2029</button>
+          </div>
+          <input type="hidden" id="phase" value="1">
+          <div class="hint" id="phaseHint"></div>
         </div>
         <div class="field">
           <div class="field-row"><span class="label">Lease term</span></div>
@@ -577,7 +594,7 @@
               <input type="number" id="residual" value="46.88" min="10" max="65" step="0.01" inputmode="decimal">
               <span class="affix post">%</span>
             </div>
-            <div class="hint">ATO minimum: 3 yrs 46.88%, 5 yrs 28.13%</div>
+            <div class="hint">ATO minimum (TD 93/142): 3 yrs 46.88%, 5 yrs 28.13%</div>
           </div>
           <div class="field">
             <div class="field-row"><label for="interestRate">Interest rate</label></div>
@@ -594,7 +611,7 @@
       <section class="card">
         <div class="card-head">
           <span class="step">3</span>
-          <div><h2>Running costs</h2><p>Packaged pre-tax in your lease, which lowers your taxable income further.</p></div>
+          <div><h2>Running costs</h2><p>Packaged in your lease from pre-tax pay, with GST claimed back by your employer.</p></div>
         </div>
         <div class="two">
           <div class="field">
@@ -619,6 +636,7 @@
           </div>
         </div>
         <div class="total-row"><span>Total running costs per year</span><span class="num" id="r-running">—</span></div>
+        <div class="total-row sub"><span>GST your employer claims back (rego has no GST)</span><span class="num" id="r-runningGst">—</span></div>
         <div class="promo">
           <div class="promo-icon" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v4M15 2v4M7 6h10v5a5 5 0 0 1-10 0V6ZM12 16v6"/></svg>
@@ -656,6 +674,8 @@
             <div class="stat"><dt>Tax with lease</dt><dd class="num" id="r-taxWith">—</dd></div>
             <div class="stat"><dt>Pre-tax deduction</dt><dd class="num" id="r-monthly">—</dd></div>
             <div class="stat"><dt>Take-home pay</dt><dd class="num" id="r-takehome">—</dd></div>
+            <div class="stat"><dt>Post-tax contribution</dt><dd class="num" id="r-ecm">—</dd></div>
+            <div class="stat"><dt>Reportable fringe benefit</dt><dd class="num" id="r-rfba">—</dd></div>
           </dl>
           <div id="verdict-box" class="verdict good">
             <div class="v-icon" id="v-emoji">✅</div>
@@ -683,6 +703,7 @@
       <div class="panel hl">
         <h3>Novated lease <span class="tag">⚡ EV</span></h3>
         <table class="breakdown"><tbody id="table-yes"></tbody></table>
+        <p class="panel-foot" id="residualNote"></p>
       </div>
     </div>
     <div class="bars" id="barChart"></div>
@@ -695,18 +716,21 @@
       <div><h2>Key assumptions</h2><p>How the numbers above are worked out.</p></div>
     </div>
     <div class="facts">
-      <div class="fact"><h4>FBT exemption</h4><p>Zero-emission vehicles under the LCT threshold ($89,332 in 2024–25) are exempt from FBT. PHEVs are excluded from FY2026.</p></div>
-      <div class="fact"><h4>GST saving</h4><p>Your employer claims the GST on the purchase, saving you about 1/11th of the car price. Built into this calculator.</p></div>
-      <div class="fact"><h4>Residual value</h4><p>Based on ATO statutory percentages. At lease end you can pay the residual, re-lease, or hand the car back.</p></div>
-      <div class="fact"><h4>Tax rates</h4><p>Uses ATO individual income tax rates plus the 2% Medicare levy. Excludes HECS/HELP and other deductions or offsets.</p></div>
-      <div class="fact"><h4>Car loan comparison</h4><p>"Standard car loan" assumes the same car at the same rate, repaid from after-tax income with no GST benefit.</p></div>
-      <div class="fact"><h4>Disclaimer</h4><p>Indicative only. Speak to a financial adviser or tax professional before entering a novated lease.</p></div>
+      <div class="fact"><h4>Electric Car Discount (FBT)</h4><p>Battery-electric and hydrogen cars below the fuel-efficient LCT threshold ($91,661 in 2026–27) are FBT-exempt. Leases committed before 1 April 2027 keep this for their term. Plug-in hybrids only qualify for arrangements made before 1 April 2025.</p></div>
+      <div class="fact"><h4>Proposed changes (not yet law)</h4><p>Announced in the 2026–27 Budget, draft legislation released: from 1 April 2027 the full exemption applies only to EVs costing $75,000 or less; dearer EVs get a 25% discount (15% statutory fraction). From 1 April 2029 all eligible EVs get the 25% discount.</p></div>
+      <div class="fact"><h4>FBT &amp; post-tax contribution</h4><p>Where FBT applies, the calculator assumes you make a post-tax employee contribution (ECM) equal to the taxable value (base value × statutory fraction), so your employer pays no FBT. This is how most novated leases are structured.</p></div>
+      <div class="fact"><h4>GST</h4><p>Your employer claims the GST on the car, capped at 1/11 of the 2026–27 car limit ($69,883, so up to $6,353), and on running costs except registration.</p></div>
+      <div class="fact"><h4>Tax rates</h4><p>2026–27 resident rates (15% / 30% / 37% / 45%), the low income tax offset and the 2% Medicare levy with the low-income reduction (latest published thresholds, 2025–26). Excludes HELP, the $1,000 standard deduction and other offsets.</p></div>
+      <div class="fact"><h4>Reportable fringe benefits</h4><p>Even an FBT-exempt EV is reported on your income statement (20% statutory fraction, grossed up by 1.8868). It isn't taxed, but counts for HELP repayments, Medicare levy surcharge and some government payments.</p></div>
+      <div class="fact"><h4>Residual &amp; car loan</h4><p>Residual uses ATO minimum percentages and is due at lease end (pay it, refinance or sell). The car loan comparison finances the full price at the same rate from after-tax pay, with no residual.</p></div>
+      <div class="fact"><h4>Prices</h4><p>Preset prices are list prices before on-road costs, checked November 2026. The LCT and $75,000 tests use the car's value, not on-road costs, so compare your quote carefully.</p></div>
+      <div class="fact"><h4>Disclaimer</h4><p>Indicative only and not financial or tax advice. Rules can change — confirm with your salary packaging provider or a tax adviser before signing.</p></div>
     </div>
   </section>
 </main>
 
 <footer>
-  <p class="disclaimer">⚡ EV Novated Lease Calculator · NSW FY2024–25 · Figures are estimates based on ATO tax rates and FBT rules. Not financial advice.</p>
+  <p class="disclaimer">⚡ EV Novated Lease Calculator · FY2026–27 · Last updated November 2026 · Estimates based on ATO tax rates and FBT rules. Not financial advice.</p>
   <a class="classic-link" href="classic.html">View the classic version →</a>
   <p class="made">Made by SunnyApps. All rights reserved.</p>
 </footer>
@@ -762,16 +786,27 @@ function setActive(seg, val) {
   seg.querySelectorAll('button').forEach(b => b.classList.toggle('active', +b.dataset.val === +val));
 }
 
-// ── VEHICLE PRESETS ────────────────────────────────────────────────
+// ── 2026–27 RULES ──────────────────────────────────────────────────
+const RULES = {
+  lctFuelEfficient: 91661,   // LCT threshold, fuel-efficient vehicles, 2026–27
+  carLimit: 69883,           // car limit 2026–27 → max GST credit 1/11
+  ecdFullCap: 75000,         // proposed full-exemption cap from 1 Apr 2027
+  fullFraction: 0.20,        // statutory formula rate
+  discountFraction: 0.15,    // proposed 25% discount → 15% statutory rate
+  type2GrossUp: 1.8868,      // reportable fringe benefits gross-up
+  medicareLow: 28011,        // Medicare levy low-income thresholds (singles, latest published: 2025–26)
+  medicareHigh: 35013,
+};
+
+// ── VEHICLE PRESETS (list prices before on-roads, Nov 2026) ─────────
 const presets = {
-  tesla3:      { price: 59990 },
-  teslaY:      { price: 72900 },
-  bzx4:        { price: 47490 },
-  polestar2:   { price: 65400 },
-  ioniq6:      { price: 59900 },
-  kiaev6:      { price: 68200 },
-  mercedeseqa: { price: 79900 },
-  bmwi4:       { price: 88900 },
+  atto3:    { price: 41990 },
+  tesla3:   { price: 45900 },
+  sealion7: { price: 54990 },
+  kiaev5:   { price: 56770 },
+  teslaY:   { price: 58900 },
+  kiaev6:   { price: 72800 },
+  teslaYL:  { price: 74900 },
 };
 $('vehiclePreset').addEventListener('change', () => {
   const v = $('vehiclePreset').value;
@@ -814,9 +849,18 @@ function setKm(val) {
 kmSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setKm(b.dataset.val); });
 kmSlider.addEventListener('input', () => setKm(kmSlider.value));
 
+// lease start phase
+const phaseSeg = $('phaseSeg');
+phaseSeg.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  $('phase').value = b.dataset.val;
+  setActive(phaseSeg, b.dataset.val);
+  calculate();
+});
+
 // term: segmented, sets ATO residual
 const termSeg = $('termSeg');
-const residuals = { 2: 56.25, 3: 46.88, 4: 37.50, 5: 28.13 };
+const residuals = { 1: 65.63, 2: 56.25, 3: 46.88, 4: 37.50, 5: 28.13 };
 termSeg.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const val = +b.dataset.val;
@@ -829,16 +873,34 @@ termSeg.addEventListener('click', e => {
 ['state', 'residual', 'interestRate', 'rego', 'insurance', 'servicing', 'electricity', 'adminFee']
   .forEach(id => $(id).addEventListener(id === 'state' ? 'change' : 'input', calculate));
 
-// ── ATO INCOME TAX + MEDICARE ──────────────────────────────────────
-function incomeTax(income) {
-  let tax = 0;
-  if (income <= 18200)       tax = 0;
-  else if (income <= 45000)  tax = (income - 18200) * 0.19;
-  else if (income <= 120000) tax = 5092 + (income - 45000) * 0.325;
-  else if (income <= 180000) tax = 29467 + (income - 120000) * 0.37;
-  else                       tax = 51667 + (income - 180000) * 0.45;
-  const medicare = income > 26000 ? income * 0.02 : 0;
-  return tax + medicare;
+// ── INCOME TAX 2026–27 (residents) + LITO + MEDICARE ───────────────
+function baseTax(x) {
+  if (x <= 18200)  return 0;
+  if (x <= 45000)  return (x - 18200) * 0.15;
+  if (x <= 135000) return 4020 + (x - 45000) * 0.30;
+  if (x <= 190000) return 31020 + (x - 135000) * 0.37;
+  return 51370 + (x - 190000) * 0.45;
+}
+function lito(x) {
+  if (x <= 37500) return 700;
+  if (x <= 45000) return 700 - (x - 37500) * 0.05;
+  if (x <= 66667) return Math.max(0, 325 - (x - 45000) * 0.015);
+  return 0;
+}
+function medicare(x) {
+  if (x <= RULES.medicareLow) return 0;
+  return Math.min(x * 0.02, (x - RULES.medicareLow) * 0.10);
+}
+function incomeTax(x) {
+  return Math.max(0, baseTax(x) - lito(x)) + medicare(x);
+}
+
+// ── FBT STATUTORY FRACTION BY PHASE ────────────────────────────────
+function fbtFraction(price, phase) {
+  if (price >= RULES.lctFuelEfficient) return { f: RULES.fullFraction, status: 'over' };
+  if (phase === 1) return { f: 0, status: 'exempt' };
+  if (phase === 2) return price <= RULES.ecdFullCap ? { f: 0, status: 'exempt' } : { f: RULES.discountFraction, status: 'discount' };
+  return { f: RULES.discountFraction, status: 'discount' };
 }
 
 // ── LOAN PMT ───────────────────────────────────────────────────────
@@ -854,6 +916,7 @@ function calculate() {
   const salary      = +$('salary').value;
   const carPrice    = +$('carPrice').value;
   const term        = +$('term').value;
+  const phase       = +$('phase').value;
   const residualPct = +$('residual').value / 100;
   const rate        = +$('interestRate').value;
   const rego        = +$('rego').value;
@@ -862,31 +925,35 @@ function calculate() {
   const electricity = +$('electricity').value;
   const adminFee    = +$('adminFee').value;
 
-  const gstExPrice    = carPrice / 1.1;
-  const residualVal   = gstExPrice * residualPct;
-  const annualRunning = rego + insurance + servicing + electricity + adminFee;
+  // Running costs: rego has no GST; employer claims GST on the rest
+  const annualRunning   = rego + insurance + servicing + electricity + adminFee;
+  const gstOnRunning    = (insurance + servicing + electricity + adminFee) / 11;
+  const packagedRunning = annualRunning - gstOnRunning;
 
-  // WITHOUT LEASE
-  const monthlyLoan     = pmt(carPrice, rate, term);
-  const annualLoanRepay = monthlyLoan * 12;
+  // Car: employer GST credit capped at 1/11 of the car limit
+  const gstCredit   = Math.min(carPrice / 11, RULES.carLimit / 11);
+  const financed    = carPrice - gstCredit;
+  const residualVal = financed * residualPct;
+
+  // WITHOUT LEASE — car loan on full price from after-tax pay
+  const annualLoanRepay = pmt(carPrice, rate, term) * 12;
   const taxNo           = incomeTax(salary);
   const totalCostNo     = taxNo + annualLoanRepay + annualRunning;
 
   // WITH LEASE
-  const financeAmount    = gstExPrice - residualVal;
-  const monthlyLease     = pmt(financeAmount, rate, term);
-  const annualLeaseRepay = monthlyLease * 12;
-  const annualPreTax     = annualLeaseRepay + annualRunning;
-  const taxableIncome    = Math.max(0, salary - annualPreTax);
+  const annualLeaseRepay = pmt(financed - residualVal / Math.pow(1 + rate / 100 / 12, term * 12), rate, term) * 12;
+  const packageTotal     = annualLeaseRepay + packagedRunning;
+  const { f: fraction, status } = fbtFraction(carPrice, phase);
+  const taxableValue     = carPrice * fraction;                 // statutory formula, base value = cost incl. GST
+  const ecm              = Math.min(taxableValue, packageTotal); // post-tax contribution to remove FBT
+  const preTax           = packageTotal - ecm;
+  const taxableIncome    = Math.max(0, salary - preTax);
   const taxWith          = incomeTax(taxableIncome);
-  const exempt           = carPrice <= 89332;
-  const fbt              = exempt ? 0 : annualLeaseRepay * 0.2 * 2.0802;
-  const totalCostWith    = taxWith + annualLeaseRepay + annualRunning + fbt;
+  const totalCostWith    = taxWith + packageTotal;
+  const rfba             = Math.max(0, carPrice * RULES.fullFraction - ecm) * RULES.type2GrossUp;
 
   const annualTaxSaving = taxNo - taxWith;
   const totalTaxSaving  = annualTaxSaving * term;
-  const monthlyPreTax   = annualPreTax / 12;
-  const monthlyTakeHome = (salary - annualPreTax - taxWith) / 12;
   const pct = taxNo > 0 ? annualTaxSaving / taxNo * 100 : 0;
 
   // SUMMARY
@@ -900,26 +967,40 @@ function calculate() {
   setNum('r-taxable', taxableIncome);
   setNum('r-taxNo', taxNo);
   setNum('r-taxWith', taxWith);
-  setNum('r-monthly', monthlyPreTax, '/mo');
-  setNum('r-takehome', monthlyTakeHome, '/mo');
+  setNum('r-monthly', preTax / 12, '/mo');
+  setNum('r-takehome', (salary - preTax - ecm - taxWith) / 12, '/mo');
+  setNum('r-ecm', ecm / 12, '/mo');
+  setNum('r-rfba', rfba);
   $('r-running').textContent = fmt(annualRunning);
+  $('r-runningGst').textContent = '−' + fmt(gstOnRunning);
 
   const pill = $('fbtPill');
-  pill.textContent = exempt ? '✓ FBT exempt' : '⚠ Over LCT threshold';
-  pill.classList.toggle('over', !exempt);
+  pill.className = 'pill' + (status === 'over' ? ' over' : status === 'discount' ? ' warn' : '');
+  pill.textContent = status === 'exempt' ? '✓ FBT exempt' : status === 'discount' ? '25% FBT discount' : '⚠ Over LCT threshold';
+
+  const phasePill = $('phasePill');
+  phasePill.textContent = phase === 1 ? 'Current law' : 'Proposed — not yet law';
+  phasePill.className = 'pill ' + (phase === 1 ? 'soft' : 'warn');
+  $('phaseHint').textContent = phase === 1
+    ? 'Full exemption for EVs under $91,661, kept for the lease term if committed before 1 April 2027.'
+    : phase === 2
+      ? 'Full exemption only up to $75,000; $75,001–$91,660 gets a 25% discount. Leases under $75,000 committed before 1 April 2029 keep the exemption.'
+      : 'All eligible EVs under the LCT threshold get a 25% FBT discount (15% statutory rate).';
 
   // TABLES
   $('table-no').innerHTML = `
     <tr><td>Income tax + Medicare</td><td>${fmt(taxNo)}</td></tr>
     <tr><td>Loan repayments (after tax)</td><td>${fmt(annualLoanRepay)}</td></tr>
-    <tr><td>Running costs (after tax)</td><td>${fmt(annualRunning)}</td></tr>
+    <tr><td>Running costs (after tax, incl. GST)</td><td>${fmt(annualRunning)}</td></tr>
     <tr class="highlight"><td>Total annual cost</td><td>${fmt(totalCostNo)}</td></tr>`;
   $('table-yes').innerHTML = `
     <tr><td>Income tax + Medicare</td><td>${fmt(taxWith)}</td></tr>
-    <tr><td>Lease repayments (pre-tax)</td><td>${fmt(annualLeaseRepay)}</td></tr>
-    <tr><td>Running costs (pre-tax)</td><td>${fmt(annualRunning)}</td></tr>
-    <tr><td>FBT payable</td><td>${exempt ? '<span class="zero">$0 ⚡</span>' : fmt(fbt)}</td></tr>
+    <tr><td>Lease repayments (ex-GST)</td><td>${fmt(annualLeaseRepay)}</td></tr>
+    <tr><td>Running costs (ex-GST)</td><td>${fmt(packagedRunning)}</td></tr>
+    <tr><td>— of which paid post-tax (ECM)</td><td>${ecm > 0 ? fmt(ecm) : '$0'}</td></tr>
+    <tr><td>FBT payable</td><td>${status === 'exempt' ? '<span class="zero">$0 ⚡ exempt</span>' : '$0 (offset by ECM)'}</td></tr>
     <tr class="highlight"><td>Total annual cost</td><td>${fmt(totalCostWith)}</td></tr>`;
+  $('residualNote').textContent = `Residual of ${fmt(residualVal)} (ex-GST) is due at the end of the lease — pay it, refinance or sell the car.`;
 
   // BARS
   const maxVal = Math.max(totalCostNo, totalCostWith) * 1.05;
@@ -948,21 +1029,26 @@ function calculate() {
   const box = $('verdict-box');
   const pctSaving = pct.toFixed(1);
   let cls, icon, title, body;
-  if (!exempt) {
-    cls = 'bad'; icon = '⚠️'; title = 'Over the FBT threshold';
-    body = `This vehicle (${fmt(carPrice)}) exceeds the $89,332 LCT threshold and may not qualify for the full FBT exemption. Consider a vehicle under this amount for maximum savings.`;
+  if (status === 'over') {
+    cls = 'bad'; icon = '⚠️'; title = 'Over the LCT threshold — no FBT exemption';
+    body = `At ${fmt(carPrice)} this car is at or above the $91,661 fuel-efficient LCT threshold, so full FBT applies. The calculator assumes a ${fmt(ecm)}/yr post-tax contribution to cover it, which cuts your saving to ${fmt(annualTaxSaving)}/yr.`;
   } else if (annualTaxSaving >= 8000) {
     cls = 'good'; icon = '🚀'; title = 'Excellent savings — highly recommended';
-    body = `You'll save ${fmt(annualTaxSaving)}/year (${pctSaving}% of your tax bill) — ${fmt(totalTaxSaving)} over the lease term. At your income, the EV FBT exemption plus pre-tax packaging delivers substantial benefits.`;
+    body = `You'll save ${fmt(annualTaxSaving)}/year (${pctSaving}% of your tax bill) — ${fmt(totalTaxSaving)} over the lease term.`;
   } else if (annualTaxSaving >= 4000) {
     cls = 'good'; icon = '✅'; title = 'Worth it — solid tax savings';
-    body = `You save ${fmt(annualTaxSaving)}/year in tax — ${fmt(totalTaxSaving)} over ${term} years. The EV FBT exemption makes this much better than leasing a petrol car. Factor in residual value risk at lease end.`;
+    body = `You save ${fmt(annualTaxSaving)}/year in tax — ${fmt(totalTaxSaving)} over ${term} years. Factor in the ${fmt(residualVal)} residual at lease end.`;
   } else if (annualTaxSaving >= 1500) {
     cls = 'ok'; icon = '🤔'; title = 'Moderate benefit — review carefully';
-    body = `Saving ${fmt(annualTaxSaving)}/year is real but modest. The pre-tax convenience and FBT exemption still help, but compare total cost of ownership against buying outright.`;
+    body = `Saving ${fmt(annualTaxSaving)}/year is real but modest. Compare the total cost of ownership against buying outright.`;
   } else {
     cls = 'bad'; icon = '❌'; title = 'Limited benefit at this income / price';
     body = `Your tax saving of ${fmt(annualTaxSaving)}/year is quite low. Consider a different vehicle or talk to a leasing specialist.`;
+  }
+  if (status === 'discount') {
+    body += ` Note: only a 25% FBT discount applies under the proposed rules, so ${fmt(ecm)}/yr is paid post-tax.`;
+  } else if (status === 'exempt' && phase === 1 && carPrice > RULES.ecdFullCap) {
+    body += ` Lock in before 1 April 2027: under the proposed rules, EVs over $75,000 lose the full exemption.`;
   }
   box.className = 'verdict ' + cls;
   $('v-emoji').textContent = icon;

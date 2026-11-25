@@ -19,22 +19,9 @@ A beautiful, interactive calculator to determine whether novated leasing an elec
 - **Light / Dark Mode** — Light by default, manual toggle (remembered once chosen)
 - **Classic version** — The previous design is kept at [`classic.html`](https://schoi0209.github.io/EV-Novated-Lease-Calculator/classic.html)
 
-## Supported EVs
-
-| Vehicle | Price |
-|---|---|
-| Tesla Model 3 RWD | ~$60k |
-| Tesla Model Y AWD | ~$72k |
-| BYD Atto 3 | ~$47k |
-| Polestar 2 | ~$65k |
-| Hyundai IONIQ 6 | ~$59k |
-| Kia EV6 | ~$68k |
-| Mercedes EQA | ~$80k |
-| BMW i4 | ~$88k |
-
 ## Credits
 
-- Tax data: [ATO 2024–25](https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents)
+- Tax data: [ATO tax rates](https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents), [LCT thresholds](https://www.ato.gov.au/tax-rates-and-codes/luxury-car-tax-rate-and-thresholds), [Electric car discount changes](https://www.ato.gov.au/about-ato/new-legislation/in-detail/businesses/electric-car-discount-more-sustainable-fbt-treatment-of-electric-cars) — last checked November 2026
 
 ## Disclaimer
 
