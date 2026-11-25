@@ -4,491 +4,510 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EV Novated Lease Calculator — NSW</title>
+<meta name="description" content="See how much tax you could save by novated leasing an FBT-exempt electric vehicle in NSW. Compare a novated lease against a standard car loan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  // Light is the default. Dark is applied only if the user chose it with the toggle.
+  (function () {
+    try { if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}
+  })();
+</script>
 <style>
-
-  /* ── THEME VARS ──────────────────────────────────────────────────── */
+  /* ── TOKENS ─────────────────────────────────────────────────────── */
   :root {
-    --bg: rgba(240,237,232,0.82);
-    --bg-solid: #f0ede8;
-    --surface: rgba(250,248,245,0.88);
-    --surface2: rgba(237,233,226,0.90);
-    --border: rgba(212,207,199,0.8);
-    --text: #1a1714;
-    --text-soft: #6b6560;
-    --accent: #1d6f42;
-    --accent-light: rgba(232,245,238,0.9);
-    --accent2: #0d4a8a;
-    --accent2-light: rgba(230,240,251,0.9);
-    --warn: #c0392b;
-    --warn-light: rgba(253,236,234,0.9);
-    --gold: #b5860d;
-    --gold-light: rgba(253,246,227,0.9);
-    --card-shadow: 0 2px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
-    --card-shadow-hover: 0 8px 40px rgba(0,0,0,0.13), 0 2px 10px rgba(0,0,0,0.06);
-    --backdrop: blur(18px) saturate(1.4);
+    --bg: #f5f6f8;
+    --glow-1: rgba(16, 185, 129, 0.12);
+    --glow-2: rgba(37, 99, 235, 0.08);
+    --surface: #ffffff;
+    --surface-2: #f4f5f7;
+    --surface-3: #e9ecf0;
+    --border: #e4e7ec;
+    --border-strong: #d0d5dd;
+    --text: #0b1220;
+    --text-2: #475467;
+    --text-3: #8a94a6;
+    --accent: #059669;
+    --accent-strong: #047857;
+    --accent-soft: #ecfdf5;
+    --accent-ring: rgba(5, 150, 105, 0.18);
+    --blue: #2563eb;
+    --blue-soft: #eff6ff;
+    --warn: #dc2626;
+    --warn-soft: #fef2f2;
+    --amber: #d97706;
+    --amber-soft: #fffbeb;
+    --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 10px 30px -12px rgba(16, 24, 40, 0.10);
+    --radius: 20px;
+    color-scheme: light;
   }
   [data-theme="dark"] {
-    --bg: rgba(15,17,23,0.80);
-    --bg-solid: #0f1117;
-    --surface: rgba(24,27,36,0.88);
-    --surface2: rgba(30,34,48,0.90);
-    --border: rgba(42,46,62,0.85);
-    --text: #e8e4dc;
-    --text-soft: #8a8890;
-    --accent: #34c66e;
-    --accent-light: rgba(13,33,24,0.92);
-    --accent2: #4a9eff;
-    --accent2-light: rgba(10,26,48,0.92);
-    --warn: #e05555;
-    --warn-light: rgba(42,15,15,0.92);
-    --gold: #e8b84b;
-    --gold-light: rgba(30,22,0,0.92);
-    --card-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.35);
-    --card-shadow-hover: 0 8px 40px rgba(0,0,0,0.6), 0 2px 10px rgba(0,0,0,0.45);
+    --bg: #08090c;
+    --glow-1: rgba(52, 211, 153, 0.10);
+    --glow-2: rgba(96, 165, 250, 0.07);
+    --surface: #111318;
+    --surface-2: #171a21;
+    --surface-3: #232833;
+    --border: #22262f;
+    --border-strong: #303644;
+    --text: #eef1f6;
+    --text-2: #a7afbd;
+    --text-3: #6c7587;
+    --accent: #34d399;
+    --accent-strong: #6ee7b7;
+    --accent-soft: rgba(52, 211, 153, 0.10);
+    --accent-ring: rgba(52, 211, 153, 0.22);
+    --blue: #60a5fa;
+    --blue-soft: rgba(96, 165, 250, 0.10);
+    --warn: #f87171;
+    --warn-soft: rgba(248, 113, 113, 0.10);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.10);
+    --shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+    color-scheme: dark;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg-solid);
+    font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
     color: var(--text);
+    line-height: 1.5;
     min-height: 100vh;
-    transition: background 0.3s, color 0.3s;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color .25s, color .25s;
   }
-
-  /* ── PAGE WRAPPER (above canvas) ─────────────────────────────────── */
-  #page-wrap {
-    position: relative;
-    z-index: 1;
+  body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(900px 520px at 8% -12%, var(--glow-1), transparent 62%),
+      radial-gradient(760px 480px at 100% -6%, var(--glow-2), transparent 60%);
   }
+  .num { font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  a { color: inherit; }
+  button { font: inherit; }
 
-  /* ── HEADER ──────────────────────────────────────────────────────── */
-  header {
-    background: var(--surface);
+  /* ── TOP BAR ────────────────────────────────────────────────────── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 74%, transparent);
+    backdrop-filter: saturate(1.6) blur(14px);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
     border-bottom: 1px solid var(--border);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 1px 12px rgba(0,0,0,0.07);
-    backdrop-filter: var(--backdrop);
-    -webkit-backdrop-filter: var(--backdrop);
   }
-  .header-left { display: flex; align-items: center; gap: 14px; }
-  .logo-badge {
-    width: 42px; height: 42px;
-    background: var(--accent);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+  .topbar-inner {
+    max-width: 1180px; margin: 0 auto; padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
-  .header-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: var(--text);
-    line-height: 1.1;
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; }
+  .brand-mark {
+    width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
+    display: grid; place-items: center; color: #fff;
+    background: linear-gradient(135deg, #10b981 0%, #2563eb 100%);
+    box-shadow: 0 6px 16px -6px rgba(16, 185, 129, 0.7);
   }
-  .header-sub {
-    font-size: 11px;
-    color: var(--text-soft);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  .brand-name { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; white-space: nowrap; }
+  .brand-sub { font-size: 12px; color: var(--text-3); white-space: nowrap; }
+  .actions { display: flex; align-items: center; gap: 8px; }
+  .bmc-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #ffdd00; color: #111; text-decoration: none;
+    font-weight: 600; font-size: 13px; line-height: 1;
+    padding: 10px 14px; border-radius: 999px; white-space: nowrap;
+    box-shadow: 0 4px 14px -6px rgba(255, 200, 0, 0.8);
+    transition: transform .15s, box-shadow .15s;
   }
-  .header-right { display: flex; align-items: center; gap: 10px; }
-  .theme-toggle {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text);
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-    backdrop-filter: var(--backdrop);
+  .bmc-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(255, 200, 0, 0.9); }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    display: grid; place-items: center; cursor: pointer;
+    transition: border-color .15s, background .15s;
   }
-  .theme-toggle:hover { background: var(--border); }
+  .icon-btn:hover { border-color: var(--border-strong); background: var(--surface-2); }
+  .icon-btn .sun { display: none; }
+  [data-theme="dark"] .icon-btn .sun { display: block; }
+  [data-theme="dark"] .icon-btn .moon { display: none; }
 
-  /* ── MAIN LAYOUT ─────────────────────────────────────────────────── */
-  main { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
+  /* ── PAGE ───────────────────────────────────────────────────────── */
+  main { max-width: 1180px; margin: 0 auto; padding: 48px 24px 64px; }
 
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 100px;
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    margin-bottom: 16px;
+  .hero { max-width: 800px; margin-bottom: 36px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 500; color: var(--accent-strong);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 18px;
   }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-ring); }
   h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(28px, 4vw, 44px);
-    line-height: 1.15;
-    margin-bottom: 10px;
+    font-size: clamp(32px, 5vw, 54px); line-height: 1.04;
+    letter-spacing: -0.035em; font-weight: 700; margin-bottom: 14px;
+    text-wrap: balance;
   }
-  h1 em { font-style: italic; color: var(--accent); }
-  .subtitle {
-    color: var(--text-soft);
-    font-size: 15px;
-    margin-bottom: 36px;
-    max-width: 560px;
-    line-height: 1.6;
+  h1 .grad {
+    background: linear-gradient(100deg, var(--accent) 10%, var(--blue) 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .lede { font-size: 16.5px; color: var(--text-2); max-width: 600px; }
 
-  /* ── GRID ────────────────────────────────────────────────────────── */
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 24px; align-items: start; }
+  .inputs { display: grid; gap: 20px; }
 
-  /* ── CARDS ───────────────────────────────────────────────────────── */
+  /* ── CARDS ──────────────────────────────────────────────────────── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    box-shadow: var(--card-shadow);
-    transition: box-shadow 0.2s;
-    backdrop-filter: var(--backdrop);
-    -webkit-backdrop-filter: var(--backdrop);
+    border-radius: var(--radius);
+    padding: 26px;
+    box-shadow: var(--shadow);
   }
-  .card:hover { box-shadow: var(--card-shadow-hover); }
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
+  .card-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 22px; }
+  .step {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 600;
+    background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border);
   }
-  .card-title .icon {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-  .icon-green { background: var(--accent-light); }
-  .icon-blue  { background: var(--accent2-light); }
-  .icon-gold  { background: var(--gold-light); }
+  .card-head h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+  .card-head p { font-size: 13.5px; color: var(--text-3); margin-top: 2px; }
 
-  /* ── FORM ────────────────────────────────────────────────────────── */
-  .field { margin-bottom: 18px; }
-  label {
-    display: block;
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-soft);
-    margin-bottom: 7px;
+  /* ── FIELDS ─────────────────────────────────────────────────────── */
+  .field + .field { margin-top: 20px; }
+  .field-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .field label, .field .label { font-size: 13.5px; font-weight: 500; color: var(--text); }
+  .hint { font-size: 12px; color: var(--text-3); margin-top: 7px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 16px; }
+  .two .field + .field { margin-top: 0; }
+
+  .control { position: relative; }
+  .control .affix {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    color: var(--text-3); font-size: 14px; pointer-events: none;
   }
+  .control .affix.pre { left: 14px; }
+  .control .affix.post { right: 14px; }
   input[type="number"], select {
-    width: 100%;
-    background: var(--surface2);
+    width: 100%; height: 46px;
+    background: var(--surface-2);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 15px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
-    appearance: none;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 15px; color: var(--text);
+    outline: none; appearance: none; -moz-appearance: textfield;
+    transition: border-color .15s, box-shadow .15s, background .15s;
   }
+  select {
+    font-family: 'Geist', system-ui, sans-serif; cursor: pointer; padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a94a6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+  }
+  .control .affix.pre ~ input { padding-left: 30px; }
+  .control .affix.post ~ input { padding-right: 34px; }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"]:hover, select:hover { border-color: var(--border-strong); }
   input[type="number"]:focus, select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    border-color: var(--accent); background: var(--surface);
+    box-shadow: 0 0 0 4px var(--accent-ring);
   }
-  .input-prefix { position: relative; }
-  .input-prefix span {
-    position: absolute;
-    left: 14px; top: 50%; transform: translateY(-50%);
-    color: var(--text-soft);
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    pointer-events: none;
-  }
-  .input-prefix input { padding-left: 32px; }
 
-  /* ── SLIDER ──────────────────────────────────────────────────────── */
-  .slider-wrap { margin-top: 6px; }
+  /* ── RANGE ──────────────────────────────────────────────────────── */
   input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--border);
-    outline: none;
-    cursor: pointer;
-    margin-top: 10px;
+    --p: 50%;
+    width: 100%; height: 6px; margin-top: 16px;
+    -webkit-appearance: none; appearance: none;
+    border-radius: 999px; outline: none; cursor: pointer;
+    background: linear-gradient(to right, var(--accent) 0 var(--p), var(--surface-3) var(--p) 100%);
   }
   input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 3px solid var(--surface);
-    box-shadow: 0 0 0 2px var(--accent);
-    cursor: pointer;
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--accent);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    transition: transform .12s, box-shadow .12s;
   }
-  .slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-soft);
-    font-family: 'DM Mono', monospace;
-    margin-top: 4px;
+  input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--accent);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   }
+  input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.1); }
+  input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 6px var(--accent-ring); }
+  .range-scale { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-3); margin-top: 8px; }
 
-  /* ── TOGGLE GROUP ────────────────────────────────────────────────── */
-  .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
-  .toggle-btn {
-    flex: 1; min-width: 60px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 10px;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: all 0.18s;
-    text-align: center;
+  /* ── SEGMENTED ──────────────────────────────────────────────────── */
+  .seg {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 4px;
   }
-  .toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .toggle-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-2);
+    font-size: 13.5px; font-weight: 500;
+    padding: 8px 6px; border-radius: 9px; cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .seg button:hover { color: var(--text); }
+  .seg button.active {
+    background: var(--surface); color: var(--text);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08), 0 0 0 1px var(--border);
+  }
+  [data-theme="dark"] .seg button.active { background: var(--surface-3); box-shadow: none; }
 
-  /* ── RESULTS ─────────────────────────────────────────────────────── */
-  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 460px) { .results-grid { grid-template-columns: 1fr; } }
-
-  .result-item {
-    background: var(--surface2);
-    border-radius: 12px;
-    padding: 16px 18px;
-    border: 1px solid var(--border);
-  }
-  .result-label {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-soft);
-    margin-bottom: 6px;
-  }
-  .result-value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--text);
-    line-height: 1.1;
-  }
-  .result-value.big      { font-size: 28px; }
-  .result-value.positive { color: var(--accent); }
-  .result-value.negative { color: var(--warn); }
-  .result-sub { font-size: 11px; color: var(--text-soft); margin-top: 3px; }
-
-  /* ── VERDICT ─────────────────────────────────────────────────────── */
-  .verdict {
-    border-radius: 14px;
-    padding: 20px 22px;
-    margin-top: 20px;
-    border: 2px solid;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .verdict.good { background: var(--accent-light); border-color: var(--accent); }
-  .verdict.bad  { background: var(--warn-light);   border-color: var(--warn); }
-  .verdict.ok   { background: var(--gold-light);   border-color: var(--gold); }
-  .verdict-emoji { font-size: 28px; }
-  .verdict-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-  .verdict.good .verdict-title { color: var(--accent); }
-  .verdict.bad  .verdict-title { color: var(--warn); }
-  .verdict.ok   .verdict-title { color: var(--gold); }
-  .verdict-body { font-size: 13px; color: var(--text-soft); line-height: 1.55; }
-
-  .full-card { grid-column: 1 / -1; }
-
-  /* ── BREAKDOWN TABLE ─────────────────────────────────────────────── */
-  .breakdown { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  .breakdown th {
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-soft);
-    font-weight: 500;
-    text-align: left;
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--border);
-  }
-  .breakdown td {
-    padding: 10px 10px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-  }
-  .breakdown tr:last-child td { border-bottom: none; }
-  .breakdown td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; }
-  .breakdown .highlight td { background: var(--accent-light); font-weight: 600; }
-  .breakdown .highlight td:last-child { color: var(--accent); }
-
-  /* ── MISC ────────────────────────────────────────────────────────── */
-  .ecm-badge {
+  .pill {
     display: inline-flex; align-items: center; gap: 5px;
-    background: var(--accent-light); color: var(--accent);
-    border-radius: 6px; font-size: 11px;
-    font-family: 'DM Mono', monospace; padding: 3px 9px; font-weight: 500;
-    margin-left: 6px;
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    font-size: 11.5px; font-weight: 600;
+    padding: 3px 9px; border-radius: 999px;
+    color: var(--accent-strong); background: var(--accent-soft);
   }
-  .divider { height: 1px; background: var(--border); margin: 20px 0; }
-  .info-box {
-    background: var(--accent2-light);
-    border: 1px solid color-mix(in srgb, var(--accent2) 30%, transparent);
-    border-radius: 10px; padding: 14px 16px;
-    font-size: 13px; color: var(--text-soft); line-height: 1.55; margin-bottom: 18px;
-  }
-  .info-box strong { color: var(--accent2); }
+  .pill.over { color: var(--warn); background: var(--warn-soft); }
 
-  /* ── BAR CHART ───────────────────────────────────────────────────── */
-  .bar-chart { margin-top: 14px; }
-  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .bar-name { font-size: 12px; color: var(--text-soft); width: 140px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
-  .bar-track { flex: 1; height: 12px; background: var(--surface2); border-radius: 6px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
-  .bar-val { font-size: 12px; font-family: 'DM Mono', monospace; width: 80px; text-align: right; color: var(--text); flex-shrink: 0; }
+  .note {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: var(--blue-soft); color: var(--text-2);
+    border-radius: 12px; padding: 12px 14px;
+    font-size: 13px; margin-bottom: 22px;
+  }
+  .note svg { flex-shrink: 0; color: var(--blue); margin-top: 1px; }
+  .note strong { color: var(--text); font-weight: 600; }
 
-  .disclaimer {
-    text-align: center; font-size: 11px; color: var(--text-soft);
-    margin-top: 40px; padding: 0 20px; line-height: 1.6;
+  .total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-strong);
+    font-size: 13.5px; color: var(--text-2);
+  }
+  .total-row .num { color: var(--text); font-size: 15px; font-weight: 500; }
+
+  /* ── SUMMARY ────────────────────────────────────────────────────── */
+  .summary { position: sticky; top: 84px; }
+  .summary-card { padding: 0; overflow: hidden; }
+  .summary-top {
+    padding: 26px;
+    background:
+      radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--blue) 14%, transparent), transparent 55%),
+      radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%);
+    border-bottom: 1px solid var(--border);
+  }
+  .kicker { font-size: 12.5px; font-weight: 500; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+  .kicker .live { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-ring); }
+  .big-num { font-size: clamp(40px, 5vw, 52px); font-weight: 500; line-height: 1.05; margin: 10px 0 6px; color: var(--text); }
+  .big-num small { font-size: 18px; color: var(--text-3); font-weight: 400; margin-left: 4px; letter-spacing: 0; }
+  .sub-line { font-size: 14px; color: var(--text-2); }
+  .sub-line .num { color: var(--accent-strong); font-weight: 500; }
+
+  .meter { margin-top: 18px; }
+  .meter-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-3); margin-bottom: 6px; }
+  .meter-top .num { color: var(--text-2); }
+  .meter-track { height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--surface-3) 80%, transparent); overflow: hidden; }
+  .meter-fill { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--blue)); transition: width .5s cubic-bezier(.2, .8, .2, 1); }
+
+  .summary-body { padding: 22px 26px 26px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
+  .stat dt { font-size: 12px; color: var(--text-3); }
+  .stat dd { font-size: 17px; font-weight: 500; margin-top: 2px; color: var(--text); }
+  .stat dd.pos { color: var(--accent-strong); }
+
+  .verdict {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-top: 16px; padding: 14px 16px;
+    border-radius: 14px; border: 1px solid;
+  }
+  .verdict .v-icon { font-size: 20px; line-height: 1.2; }
+  .verdict .v-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+  .verdict .v-body { font-size: 13px; color: var(--text-2); }
+  .verdict.good { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .verdict.good .v-title { color: var(--accent-strong); }
+  .verdict.ok { background: var(--amber-soft); border-color: color-mix(in srgb, var(--amber) 30%, transparent); }
+  .verdict.ok .v-title { color: var(--amber); }
+  .verdict.bad { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+  .verdict.bad .v-title { color: var(--warn); }
+
+  /* ── COMPARISON ─────────────────────────────────────────────────── */
+  .section { margin-top: 24px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { border: 1px solid var(--border); border-radius: 16px; padding: 18px 18px 8px; background: var(--surface-2); }
+  .panel.hl { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .panel h3 .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; }
+  [data-theme="dark"] .panel h3 .tag { color: #052e1f; }
+  .breakdown { width: 100%; border-collapse: collapse; }
+  .breakdown td { padding: 10px 0; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border); }
+  .breakdown td:last-child { text-align: right; font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--text); }
+  .breakdown tr:last-child td { border-bottom: 0; }
+  .breakdown .highlight td { color: var(--text); font-weight: 600; padding-top: 14px; }
+  .panel.hl .breakdown td { border-color: color-mix(in srgb, var(--accent) 18%, transparent); }
+  .panel.hl .breakdown .highlight td:last-child { color: var(--accent-strong); }
+  .zero { color: var(--accent-strong); font-weight: 600; }
+
+  .bars { margin-top: 26px; display: grid; gap: 14px; }
+  .bars-title { font-size: 13px; font-weight: 600; color: var(--text-2); }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr 96px; align-items: center; gap: 14px; }
+  .bar-name { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+  .bar-name i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+  .bar-track { height: 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; width: 0; transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+  .bar-val { font-size: 13px; text-align: right; color: var(--text); }
+
+  /* ── ASSUMPTIONS ────────────────────────────────────────────────── */
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .fact { padding: 16px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); }
+  .fact h4 { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+  .fact p { font-size: 13px; color: var(--text-2); }
+
+  /* ── FOOTER ─────────────────────────────────────────────────────── */
+  footer { max-width: 1180px; margin: 0 auto; padding: 8px 24px 48px; text-align: center; }
+  .disclaimer { font-size: 12.5px; color: var(--text-3); max-width: 640px; margin: 0 auto 14px; }
+  .classic-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500; color: var(--text-2); text-decoration: none;
+    padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface);
+  }
+  .classic-link:hover { color: var(--text); border-color: var(--border-strong); }
+  .made { margin-top: 18px; font-size: 12.5px; color: var(--text-3); }
+
+  /* ── MOBILE RESULT BAR ──────────────────────────────────────────── */
+  .mbar {
+    display: none;
+    position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60;
+    align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 14px 12px 18px; border-radius: 16px;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(16px) saturate(1.5); -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid var(--border); box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.3);
+    transition: transform .25s, opacity .25s;
+  }
+  .mbar.hide { transform: translateY(140%); opacity: 0; pointer-events: none; }
+  .mbar .lbl { font-size: 11.5px; color: var(--text-3); }
+  .mbar .val { font-size: 20px; font-weight: 500; color: var(--accent-strong); }
+  .mbar a {
+    text-decoration: none; font-size: 13px; font-weight: 600;
+    background: var(--text); color: var(--bg); padding: 10px 14px; border-radius: 12px; white-space: nowrap;
   }
 
-  /* ── BUY ME A COFFEE ─────────────────────────────────────────────── */
-  .bmc-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: #FFDD00;
-    color: #000;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 15px;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(255,221,0,0.35);
-    line-height: 1;
+  /* ── RESPONSIVE ─────────────────────────────────────────────────── */
+  @media (max-width: 1000px) {
+    .layout { grid-template-columns: 1fr; }
+    .summary { position: static; }
+    .mbar { display: flex; }
+    body { padding-bottom: 84px; }
   }
-  .bmc-btn:hover {
-    background: #FFE833;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(255,221,0,0.5);
+  @media (max-width: 720px) {
+    main { padding: 32px 16px 48px; }
+    .topbar-inner { padding: 10px 16px; }
+    .card { padding: 20px; }
+    .summary-top, .summary-body { padding-left: 20px; padding-right: 20px; }
+    .compare, .facts { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 1fr 90px; }
+    .bar-name { grid-column: 1 / -1; }
+  }
+  @media (max-width: 520px) {
+    .brand-sub { display: none; }
+    .bmc-text { display: none; }
+    .two { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
   }
 </style>
 </head>
 <body>
 
-<div id="page-wrap">
-  <header>
-    <div class="header-left">
-      <div class="logo-badge">⚡</div>
-      <div>
-        <div class="header-title">EV Novated Lease Calculator</div>
-        <div class="header-sub">NSW · FY2024–25 · FBT Exempt</div>
-      </div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="./">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></svg>
+      </span>
+      <span>
+        <span class="brand-name" style="display:block">EV Novated Lease Calculator</span>
+        <span class="brand-sub" style="display:block">NSW · FY2024–25 · FBT exempt</span>
+      </span>
+    </a>
+    <div class="actions">
+      <a class="bmc-btn" href="https://buymeacoffee.com/schoi0209" target="_blank" rel="noopener">☕<span class="bmc-text">Buy me a coffee</span></a>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" title="Toggle theme">
+        <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
     </div>
-    <div class="header-right">
-      <a class="bmc-btn" href="https://buymeacoffee.com/schoi0209" target="_blank" rel="noopener">
-        ☕ Buy me a coffee
-      </a>
-<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
-    </div>
-  </header>
+  </div>
+</div>
 
-  <main>
-    <div class="hero-tag">⚡ Zero FBT for EVs under $89,332</div>
-    <h1>Is Novated Leasing<br><em>Worth It?</em></h1>
-    <p class="subtitle">Enter your details to see real tax savings from pre-tax salary packaging an EV in NSW — including the 2024–25 FBT exemption for eligible electric vehicles.</p>
+<main>
+  <section class="hero">
+    <span class="eyebrow"><span class="dot"></span>Zero FBT for EVs under $89,332</span>
+    <h1>Is an EV novated lease <span class="grad">worth it?</span></h1>
+    <p class="lede">See the real tax saving from salary-packaging an electric vehicle in NSW — including the FBT exemption for eligible EVs — side by side with a standard car loan.</p>
+  </section>
 
-    <div class="grid">
-      <!-- YOUR SALARY -->
-      <div class="card">
-        <div class="card-title"><span class="icon icon-green">👤</span> Your Salary &amp; Tax</div>
-        <div class="info-box">
-          <strong>NSW FBT Exemption 2024–25:</strong> Eligible EVs under $89,332 (luxury car tax threshold) receive full FBT exemption when novated leased — a major benefit vs petrol cars.
-        </div>
-        <div class="field">
-          <label>Annual Gross Salary</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="salary" value="120000" min="30000" max="500000" step="1000"
-              oninput="inputToSlider('salary','salarySlider')" onchange="inputToSlider('salary','salarySlider')">
-          </div>
-          <div class="slider-wrap">
-            <input type="range" id="salarySlider" min="40000" max="300000" step="1000" value="120000"
-              oninput="sliderToInput('salarySlider','salary')">
-            <div class="slider-labels"><span>$40k</span><span>$300k</span></div>
-          </div>
-        </div>
-        <div class="field">
-          <label>State / Territory</label>
-          <select id="state" onchange="calculate()">
-            <option value="NSW" selected>NSW</option>
-            <option value="VIC">VIC</option>
-            <option value="QLD">QLD</option>
-            <option value="WA">WA</option>
-            <option value="SA">SA</option>
-            <option value="TAS">TAS</option>
-            <option value="ACT">ACT</option>
-            <option value="NT">NT</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Annual km driven</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" onclick="setKm(10000,this)">10,000</button>
-            <button class="toggle-btn active" onclick="setKm(15000,this)">15,000</button>
-            <button class="toggle-btn" onclick="setKm(20000,this)">20,000</button>
-            <button class="toggle-btn" onclick="setKm(25000,this)">25,000</button>
-          </div>
-          <div class="slider-wrap" style="margin-top:10px">
-            <input type="range" id="kmSlider" min="5000" max="40000" step="1000" value="15000"
-              oninput="document.getElementById('km').value=this.value; calculate()">
-            <input type="hidden" id="km" value="15000">
-            <div class="slider-labels"><span>5,000 km</span><span>40,000 km</span></div>
-          </div>
-        </div>
-      </div>
+  <div class="layout">
+    <div class="inputs">
 
-      <!-- EV DETAILS -->
-      <div class="card">
-        <div class="card-title"><span class="icon icon-blue">🚗</span> Your EV Details</div>
+      <!-- 1. SALARY -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">1</span>
+          <div><h2>Your salary &amp; tax</h2><p>Used to work out your marginal tax rate.</p></div>
+        </div>
+        <div class="note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span><strong>FBT exemption 2024–25:</strong> eligible EVs under $89,332 (the luxury car tax threshold) pay no FBT when novated leased — a major advantage over petrol cars.</span>
+        </div>
         <div class="field">
-          <label>Vehicle Type <span class="ecm-badge">✓ FBT Exempt</span></label>
-          <select id="vehiclePreset" onchange="applyPreset()">
-            <option value="custom">Custom / Enter manually</option>
+          <div class="field-row"><label for="salary">Annual gross salary</label></div>
+          <div class="control">
+            <span class="affix pre">$</span>
+            <input type="number" id="salary" value="120000" min="30000" max="500000" step="1000" inputmode="numeric">
+          </div>
+          <input type="range" id="salarySlider" min="40000" max="300000" step="1000" value="120000" aria-label="Annual gross salary">
+          <div class="range-scale"><span>$40k</span><span>$300k</span></div>
+        </div>
+        <div class="two" style="margin-top:20px">
+          <div class="field">
+            <div class="field-row"><label for="state">State / territory</label></div>
+            <select id="state">
+              <option value="NSW" selected>NSW</option>
+              <option value="VIC">VIC</option>
+              <option value="QLD">QLD</option>
+              <option value="WA">WA</option>
+              <option value="SA">SA</option>
+              <option value="TAS">TAS</option>
+              <option value="ACT">ACT</option>
+              <option value="NT">NT</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-row"><span class="label">Annual km driven</span><span class="num" id="kmLabel" style="font-size:13px;color:var(--text-2)">15,000 km</span></div>
+            <div class="seg" id="kmSeg" role="group" aria-label="Annual km driven">
+              <button type="button" data-val="10000">10k</button>
+              <button type="button" data-val="15000" class="active">15k</button>
+              <button type="button" data-val="20000">20k</button>
+              <button type="button" data-val="25000">25k</button>
+            </div>
+          </div>
+        </div>
+        <input type="range" id="kmSlider" min="5000" max="40000" step="1000" value="15000" aria-label="Annual km driven">
+        <input type="hidden" id="km" value="15000">
+        <div class="range-scale"><span>5,000 km</span><span>40,000 km</span></div>
+      </section>
+
+      <!-- 2. VEHICLE -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">2</span>
+          <div><h2>Your EV</h2><p>Pick a popular model or enter your own price.</p></div>
+        </div>
+        <div class="field">
+          <div class="field-row"><label for="vehiclePreset">Vehicle</label><span class="pill" id="fbtPill">✓ FBT exempt</span></div>
+          <select id="vehiclePreset">
+            <option value="custom">Custom / enter manually</option>
             <option value="tesla3" selected>Tesla Model 3 RWD (~$60k)</option>
             <option value="teslaY">Tesla Model Y AWD (~$72k)</option>
             <option value="bzx4">BYD Atto 3 (~$47k)</option>
@@ -500,198 +519,200 @@
           </select>
         </div>
         <div class="field">
-          <label>Vehicle Drive Away Price</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="carPrice" value="59990" min="15000" max="200000" step="500"
-              oninput="inputToSlider('carPrice','carPriceSlider')" onchange="inputToSlider('carPrice','carPriceSlider')">
+          <div class="field-row"><label for="carPrice">Drive-away price</label></div>
+          <div class="control">
+            <span class="affix pre">$</span>
+            <input type="number" id="carPrice" value="59990" min="15000" max="200000" step="500" inputmode="numeric">
           </div>
-          <div class="slider-wrap">
-            <input type="range" id="carPriceSlider" min="20000" max="150000" step="500" value="59990"
-              oninput="sliderToInput('carPriceSlider','carPrice')">
-            <div class="slider-labels"><span>$20k</span><span>$150k</span></div>
-          </div>
+          <input type="range" id="carPriceSlider" min="20000" max="150000" step="500" value="59990" aria-label="Drive-away price">
+          <div class="range-scale"><span>$20k</span><span>$150k</span></div>
         </div>
         <div class="field">
-          <label>Lease Term</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" onclick="setTerm(2,this)">2 yr</button>
-            <button class="toggle-btn active" onclick="setTerm(3,this)">3 yr</button>
-            <button class="toggle-btn" onclick="setTerm(4,this)">4 yr</button>
-            <button class="toggle-btn" onclick="setTerm(5,this)">5 yr</button>
+          <div class="field-row"><span class="label">Lease term</span></div>
+          <div class="seg" id="termSeg" role="group" aria-label="Lease term">
+            <button type="button" data-val="2">2 yrs</button>
+            <button type="button" data-val="3" class="active">3 yrs</button>
+            <button type="button" data-val="4">4 yrs</button>
+            <button type="button" data-val="5">5 yrs</button>
           </div>
           <input type="hidden" id="term" value="3">
         </div>
-        <div class="field">
-          <label>Residual Value %</label>
-          <div class="input-prefix"><span>%</span>
-            <input type="number" id="residual" value="46.88" min="10" max="65" step="0.01" onchange="calculate()">
+        <div class="two" style="margin-top:20px">
+          <div class="field">
+            <div class="field-row"><label for="residual">Residual value</label></div>
+            <div class="control">
+              <input type="number" id="residual" value="46.88" min="10" max="65" step="0.01" inputmode="decimal">
+              <span class="affix post">%</span>
+            </div>
+            <div class="hint">ATO minimum: 3 yrs 46.88%, 5 yrs 28.13%</div>
           </div>
-          <small style="color:var(--text-soft);font-size:11px;font-family:'DM Mono',monospace">ATO guidelines: 3yr=46.88%, 5yr=28.13%</small>
-        </div>
-        <div class="field">
-          <label>Interest Rate (Finance Rate)</label>
-          <div class="input-prefix"><span>%</span>
-            <input type="number" id="interestRate" value="7.5" min="2" max="20" step="0.1" onchange="calculate()">
+          <div class="field">
+            <div class="field-row"><label for="interestRate">Interest rate</label></div>
+            <div class="control">
+              <input type="number" id="interestRate" value="7.5" min="2" max="20" step="0.1" inputmode="decimal">
+              <span class="affix post">%</span>
+            </div>
+            <div class="hint">Finance rate p.a.</div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- RUNNING COSTS -->
-      <div class="card">
-        <div class="card-title"><span class="icon icon-gold">⛽</span> Running Costs (Pre-tax)</div>
-        <p style="font-size:13px;color:var(--text-soft);margin-bottom:16px;line-height:1.5">These are packaged pre-tax in your novated lease — reducing your taxable income further.</p>
-        <div class="field">
-          <label>Annual Registration (NSW)</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="rego" value="900" min="0" max="3000" step="50" onchange="calculate()">
+      <!-- 3. RUNNING COSTS -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step">3</span>
+          <div><h2>Running costs</h2><p>Packaged pre-tax in your lease, which lowers your taxable income further.</p></div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <div class="field-row"><label for="rego">Registration</label></div>
+            <div class="control"><span class="affix pre">$</span><input type="number" id="rego" value="900" min="0" max="3000" step="50" inputmode="numeric"></div>
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="insurance">Comprehensive insurance</label></div>
+            <div class="control"><span class="affix pre">$</span><input type="number" id="insurance" value="1800" min="0" max="5000" step="50" inputmode="numeric"></div>
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="servicing">Tyres &amp; servicing</label></div>
+            <div class="control"><span class="affix pre">$</span><input type="number" id="servicing" value="600" min="0" max="5000" step="50" inputmode="numeric"></div>
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="electricity">Electricity / charging</label></div>
+            <div class="control"><span class="affix pre">$</span><input type="number" id="electricity" value="800" min="0" max="5000" step="50" inputmode="numeric"></div>
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="adminFee">Management / admin fee</label></div>
+            <div class="control"><span class="affix pre">$</span><input type="number" id="adminFee" value="900" min="0" max="3000" step="50" inputmode="numeric"></div>
           </div>
         </div>
-        <div class="field">
-          <label>Comprehensive Insurance</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="insurance" value="1800" min="0" max="5000" step="50" onchange="calculate()">
-          </div>
-        </div>
-        <div class="field">
-          <label>Tyres &amp; Servicing / year</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="servicing" value="600" min="0" max="5000" step="50" onchange="calculate()">
-          </div>
-        </div>
-        <div class="field">
-          <label>Electricity / Charging</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="electricity" value="800" min="0" max="5000" step="50" onchange="calculate()">
-          </div>
-        </div>
-        <div class="field">
-          <label>Management / Admin Fee</label>
-          <div class="input-prefix"><span>$</span>
-            <input type="number" id="adminFee" value="900" min="0" max="3000" step="50" onchange="calculate()">
-          </div>
-        </div>
-      </div>
-
-      <!-- RESULTS -->
-      <div class="card">
-        <div class="card-title"><span class="icon icon-green">📊</span> Tax Savings Summary</div>
-        <div class="results-grid">
-          <div class="result-item">
-            <div class="result-label">Pre-tax Income</div>
-            <div class="result-value big" id="r-salary">$120,000</div>
-            <div class="result-sub">Gross salary</div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Taxable Income</div>
-            <div class="result-value big positive" id="r-taxable">—</div>
-            <div class="result-sub">After packaging</div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Tax Without Lease</div>
-            <div class="result-value" id="r-taxNo">—</div>
-            <div class="result-sub">Inc. Medicare</div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">Tax With Lease</div>
-            <div class="result-value" id="r-taxWith">—</div>
-            <div class="result-sub">Inc. Medicare</div>
-          </div>
-          <div class="result-item" style="border:2px solid var(--accent)">
-            <div class="result-label">Annual Tax Saving</div>
-            <div class="result-value big positive" id="r-taxSaving">—</div>
-            <div class="result-sub">In your pocket</div>
-          </div>
-          <div class="result-item" style="border:2px solid var(--accent)">
-            <div class="result-label">Total Over Lease</div>
-            <div class="result-value big positive" id="r-totalSaving">—</div>
-            <div class="result-sub" id="r-termLabel">Over 3 years</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="results-grid">
-          <div class="result-item">
-            <div class="result-label">Monthly Pre-tax Deduction</div>
-            <div class="result-value" id="r-monthly">—</div>
-            <div class="result-sub">From payslip</div>
-          </div>
-          <div class="result-item">
-            <div class="result-label">After-tax Take-home</div>
-            <div class="result-value" id="r-takehome">—</div>
-            <div class="result-sub">Monthly net</div>
-          </div>
-        </div>
-        <div id="verdict-box" class="verdict good" style="margin-top:18px">
-          <div class="verdict-emoji" id="v-emoji">✅</div>
-          <div>
-            <div class="verdict-title" id="v-title">Loading…</div>
-            <div class="verdict-body" id="v-body"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FULL: COMPARISON -->
-      <div class="card full-card">
-        <div class="card-title"><span class="icon icon-blue">⚖️</span> Full Cost Comparison</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-          <div>
-            <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-soft)">Without Novated Lease</h3>
-            <table class="breakdown">
-              <thead><tr><th>Item</th><th>Annual</th></tr></thead>
-              <tbody id="table-no"></tbody>
-            </table>
-          </div>
-          <div>
-            <h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--accent)">With Novated Lease ⚡</h3>
-            <table class="breakdown">
-              <thead><tr><th>Item</th><th>Annual</th></tr></thead>
-              <tbody id="table-yes"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="bar-chart" id="barChart"></div>
-      </div>
-
-      <!-- FULL: ASSUMPTIONS -->
-      <div class="card full-card">
-        <div class="card-title"><span class="icon icon-gold">📌</span> Key Assumptions &amp; Notes</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:13px;color:var(--text-soft);line-height:1.6">
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">FBT Exemption</strong>
-            Zero-emission vehicles under the LCT threshold ($89,332 in 2024-25) are exempt from FBT. PHEVs excluded from FY2026.</div>
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">GST Saving</strong>
-            The employer claims GST on the vehicle purchase, saving you ~1/11th of the car price. Embedded in this calculator.</div>
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">Residual Value</strong>
-            Based on ATO statutory percentages. At lease end you can pay the residual, re-lease, or return the car.</div>
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">Tax Rates</strong>
-            Uses 2024–25 ATO individual income tax rates + 2% Medicare levy. Excludes HECS/HELP, other deductions or offsets.</div>
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">Car Loan Comparison</strong>
-            "Without lease" assumes you finance the same car at the same interest rate, paid from after-tax income with no GST benefit.</div>
-          <div><strong style="color:var(--text);display:block;margin-bottom:4px">Disclaimer</strong>
-            Indicative purposes only. Consult a financial adviser or tax professional before entering a novated lease.</div>
-        </div>
-      </div>
+        <div class="total-row"><span>Total running costs per year</span><span class="num" id="r-running">—</span></div>
+      </section>
     </div>
 
-    <p class="disclaimer">⚡ EV Novated Lease Calculator · NSW FY2024–25 · Figures are estimates based on ATO tax rates and FBT rules. Not financial advice.<br></p>
-  </main>
+    <!-- SUMMARY -->
+    <aside class="summary" id="results">
+      <section class="card summary-card">
+        <div class="summary-top">
+          <div class="kicker"><span class="live"></span>Annual tax saving</div>
+          <div class="big-num num"><span id="r-taxSaving">—</span><small>/yr</small></div>
+          <div class="sub-line"><span class="num" id="r-totalSaving">—</span> <span id="r-termLabel">over 3 years</span></div>
+          <div class="meter">
+            <div class="meter-top"><span>Share of your tax bill saved</span><span class="num" id="r-pct">—</span></div>
+            <div class="meter-track"><div class="meter-fill" id="r-pctBar"></div></div>
+          </div>
+        </div>
+        <div class="summary-body">
+          <dl class="stats">
+            <div class="stat"><dt>Gross salary</dt><dd class="num" id="r-salary">—</dd></div>
+            <div class="stat"><dt>Taxable income</dt><dd class="num pos" id="r-taxable">—</dd></div>
+            <div class="stat"><dt>Tax without lease</dt><dd class="num" id="r-taxNo">—</dd></div>
+            <div class="stat"><dt>Tax with lease</dt><dd class="num" id="r-taxWith">—</dd></div>
+            <div class="stat"><dt>Pre-tax deduction</dt><dd class="num" id="r-monthly">—</dd></div>
+            <div class="stat"><dt>Take-home pay</dt><dd class="num" id="r-takehome">—</dd></div>
+          </dl>
+          <div id="verdict-box" class="verdict good">
+            <div class="v-icon" id="v-emoji">✅</div>
+            <div>
+              <div class="v-title" id="v-title">Calculating…</div>
+              <div class="v-body" id="v-body"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- COMPARISON -->
+  <section class="card section">
+    <div class="card-head">
+      <span class="step">⚖</span>
+      <div><h2>Full cost comparison</h2><p>Annual cost of the same car, financed two ways.</p></div>
+    </div>
+    <div class="compare">
+      <div class="panel">
+        <h3>Standard car loan</h3>
+        <table class="breakdown"><tbody id="table-no"></tbody></table>
+      </div>
+      <div class="panel hl">
+        <h3>Novated lease <span class="tag">⚡ EV</span></h3>
+        <table class="breakdown"><tbody id="table-yes"></tbody></table>
+      </div>
+    </div>
+    <div class="bars" id="barChart"></div>
+  </section>
+
+  <!-- ASSUMPTIONS -->
+  <section class="card section">
+    <div class="card-head">
+      <span class="step">i</span>
+      <div><h2>Key assumptions</h2><p>How the numbers above are worked out.</p></div>
+    </div>
+    <div class="facts">
+      <div class="fact"><h4>FBT exemption</h4><p>Zero-emission vehicles under the LCT threshold ($89,332 in 2024–25) are exempt from FBT. PHEVs are excluded from FY2026.</p></div>
+      <div class="fact"><h4>GST saving</h4><p>Your employer claims the GST on the purchase, saving you about 1/11th of the car price. Built into this calculator.</p></div>
+      <div class="fact"><h4>Residual value</h4><p>Based on ATO statutory percentages. At lease end you can pay the residual, re-lease, or hand the car back.</p></div>
+      <div class="fact"><h4>Tax rates</h4><p>Uses ATO individual income tax rates plus the 2% Medicare levy. Excludes HECS/HELP and other deductions or offsets.</p></div>
+      <div class="fact"><h4>Car loan comparison</h4><p>"Standard car loan" assumes the same car at the same rate, repaid from after-tax income with no GST benefit.</p></div>
+      <div class="fact"><h4>Disclaimer</h4><p>Indicative only. Speak to a financial adviser or tax professional before entering a novated lease.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="disclaimer">⚡ EV Novated Lease Calculator · NSW FY2024–25 · Figures are estimates based on ATO tax rates and FBT rules. Not financial advice.</p>
+  <a class="classic-link" href="classic.html">View the classic version →</a>
+  <p class="made">Made by SunnyApps. All rights reserved.</p>
+</footer>
+
+<div class="mbar" id="mbar">
+  <div>
+    <div class="lbl">Annual tax saving</div>
+    <div class="val num" id="m-saving">—</div>
+  </div>
+  <a href="#results">See results</a>
 </div>
 
 <script>
 // ── THEME ──────────────────────────────────────────────────────────
-const savedTheme = localStorage.getItem('theme') ||
-  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-document.documentElement.setAttribute('data-theme', savedTheme);
-updateThemeBtn();
-
-function toggleTheme() {
-  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  updateThemeBtn();
+const themeBtn = document.getElementById('themeBtn');
+function syncThemeBtn() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
 }
-function updateThemeBtn() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.getElementById('themeBtn').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+themeBtn.addEventListener('click', () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (dark) document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', 'dark');
+  try { localStorage.setItem('theme', dark ? 'light' : 'dark'); } catch (e) {}
+  syncThemeBtn();
+});
+syncThemeBtn();
+
+// ── HELPERS ────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = n => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString('en-AU');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const anims = {};
+function setNum(id, value, suffix = '') {
+  const el = $(id);
+  const from = el.dataset.v === undefined ? 0 : +el.dataset.v;
+  el.dataset.v = value;
+  cancelAnimationFrame(anims[id]);
+  if (reduceMotion || from === value) { el.textContent = fmt(value) + suffix; return; }
+  const t0 = performance.now(), dur = 420;
+  const step = t => {
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(from + (value - from) * e) + suffix;
+    if (p < 1) anims[id] = requestAnimationFrame(step);
+  };
+  anims[id] = requestAnimationFrame(step);
+}
+function paintRange(r) {
+  const p = (r.value - r.min) / (r.max - r.min) * 100;
+  r.style.setProperty('--p', Math.max(0, Math.min(100, p)) + '%');
+}
+function setActive(seg, val) {
+  seg.querySelectorAll('button').forEach(b => b.classList.toggle('active', +b.dataset.val === +val));
 }
 
 // ── VEHICLE PRESETS ────────────────────────────────────────────────
@@ -705,44 +726,63 @@ const presets = {
   mercedeseqa: { price: 79900 },
   bmwi4:       { price: 88900 },
 };
-function applyPreset() {
-  const v = document.getElementById('vehiclePreset').value;
+$('vehiclePreset').addEventListener('change', () => {
+  const v = $('vehiclePreset').value;
   if (presets[v]) {
-    document.getElementById('carPrice').value = presets[v].price;
-    document.getElementById('carPriceSlider').value = presets[v].price;
+    $('carPrice').value = presets[v].price;
+    $('carPriceSlider').value = presets[v].price;
+    paintRange($('carPriceSlider'));
     calculate();
   }
+});
+function syncPresetToPrice() {
+  const price = +$('carPrice').value;
+  const match = Object.keys(presets).find(k => presets[k].price === price);
+  $('vehiclePreset').value = match || 'custom';
 }
 
-// ── HELPERS ────────────────────────────────────────────────────────
-// Slider → Input (called from range oninput)
-function sliderToInput(sliderId, inputId) {
-  document.getElementById(inputId).value = document.getElementById(sliderId).value;
-  calculate();
-}
-// Input → Slider (called from number input onchange/oninput)
-function inputToSlider(inputId, sliderId) {
-  document.getElementById(sliderId).value = document.getElementById(inputId).value;
-  calculate();
-}
-function setKm(val, btn) {
-  document.getElementById('km').value = val;
-  document.getElementById('kmSlider').value = val;
-  document.querySelectorAll('[onclick^="setKm"]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  calculate();
-}
-function setTerm(val, btn) {
-  document.getElementById('term').value = val;
-  document.querySelectorAll('[onclick^="setTerm"]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const residuals = { 2: 56.25, 3: 46.88, 4: 37.50, 5: 28.13 };
-  document.getElementById('residual').value = residuals[val] ?? 46.88;
-  calculate();
-}
-const fmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+// ── WIRING: number ⇄ slider ────────────────────────────────────────
+[['salary', 'salarySlider'], ['carPrice', 'carPriceSlider']].forEach(([inputId, sliderId]) => {
+  const input = $(inputId), slider = $(sliderId);
+  slider.addEventListener('input', () => {
+    input.value = slider.value; paintRange(slider);
+    if (inputId === 'carPrice') syncPresetToPrice();
+    calculate();
+  });
+  input.addEventListener('input', () => {
+    slider.value = input.value; paintRange(slider);
+    if (inputId === 'carPrice') syncPresetToPrice();
+    calculate();
+  });
+});
 
-// ── ATO INCOME TAX 2024–25 + MEDICARE ─────────────────────────────
+// km: segmented + slider
+const kmSeg = $('kmSeg'), kmSlider = $('kmSlider');
+function setKm(val) {
+  $('km').value = val; kmSlider.value = val; paintRange(kmSlider);
+  setActive(kmSeg, val);
+  $('kmLabel').textContent = (+val).toLocaleString('en-AU') + ' km';
+  calculate();
+}
+kmSeg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) setKm(b.dataset.val); });
+kmSlider.addEventListener('input', () => setKm(kmSlider.value));
+
+// term: segmented, sets ATO residual
+const termSeg = $('termSeg');
+const residuals = { 2: 56.25, 3: 46.88, 4: 37.50, 5: 28.13 };
+termSeg.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const val = +b.dataset.val;
+  $('term').value = val;
+  setActive(termSeg, val);
+  $('residual').value = residuals[val] ?? 46.88;
+  calculate();
+});
+
+['state', 'residual', 'interestRate', 'rego', 'insurance', 'servicing', 'electricity', 'adminFee']
+  .forEach(id => $(id).addEventListener(id === 'state' ? 'change' : 'input', calculate));
+
+// ── ATO INCOME TAX + MEDICARE ──────────────────────────────────────
 function incomeTax(income) {
   let tax = 0;
   if (income <= 18200)       tax = 0;
@@ -759,121 +799,140 @@ function pmt(principal, annualRate, years) {
   const r = annualRate / 100 / 12;
   const n = years * 12;
   if (r === 0) return principal / n;
-  return principal * (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+  return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
 // ── MAIN CALCULATE ─────────────────────────────────────────────────
 function calculate() {
-  const salary   = +document.getElementById('salary').value;
-  const carPrice = +document.getElementById('carPrice').value;
-  const term     = +document.getElementById('term').value;
-  const residualPct  = +document.getElementById('residual').value / 100;
-  const rate     = +document.getElementById('interestRate').value;
-  const rego        = +document.getElementById('rego').value;
-  const insurance   = +document.getElementById('insurance').value;
-  const servicing   = +document.getElementById('servicing').value;
-  const electricity = +document.getElementById('electricity').value;
-  const adminFee    = +document.getElementById('adminFee').value;
+  const salary      = +$('salary').value;
+  const carPrice    = +$('carPrice').value;
+  const term        = +$('term').value;
+  const residualPct = +$('residual').value / 100;
+  const rate        = +$('interestRate').value;
+  const rego        = +$('rego').value;
+  const insurance   = +$('insurance').value;
+  const servicing   = +$('servicing').value;
+  const electricity = +$('electricity').value;
+  const adminFee    = +$('adminFee').value;
 
-  const gstExPrice   = carPrice / 1.1;
-  const residualVal  = gstExPrice * residualPct;
+  const gstExPrice    = carPrice / 1.1;
+  const residualVal   = gstExPrice * residualPct;
   const annualRunning = rego + insurance + servicing + electricity + adminFee;
 
   // WITHOUT LEASE
-  const monthlyLoan    = pmt(carPrice, rate, term);
+  const monthlyLoan     = pmt(carPrice, rate, term);
   const annualLoanRepay = monthlyLoan * 12;
-  const taxNo          = incomeTax(salary);
-  const totalCostNo    = taxNo + annualLoanRepay + annualRunning;
+  const taxNo           = incomeTax(salary);
+  const totalCostNo     = taxNo + annualLoanRepay + annualRunning;
 
   // WITH LEASE
-  const financeAmount  = gstExPrice - residualVal;
-  const monthlyLease   = pmt(financeAmount, rate, term);
+  const financeAmount    = gstExPrice - residualVal;
+  const monthlyLease     = pmt(financeAmount, rate, term);
   const annualLeaseRepay = monthlyLease * 12;
-  const annualPreTax   = annualLeaseRepay + annualRunning;
-  const taxableIncome  = Math.max(0, salary - annualPreTax);
-  const taxWith        = incomeTax(taxableIncome);
-  const fbt            = carPrice <= 89332 ? 0 : annualLeaseRepay * 0.2 * 2.0802;
-  const totalCostWith  = taxWith + annualLeaseRepay + annualRunning + fbt;
+  const annualPreTax     = annualLeaseRepay + annualRunning;
+  const taxableIncome    = Math.max(0, salary - annualPreTax);
+  const taxWith          = incomeTax(taxableIncome);
+  const exempt           = carPrice <= 89332;
+  const fbt              = exempt ? 0 : annualLeaseRepay * 0.2 * 2.0802;
+  const totalCostWith    = taxWith + annualLeaseRepay + annualRunning + fbt;
 
   const annualTaxSaving = taxNo - taxWith;
   const totalTaxSaving  = annualTaxSaving * term;
   const monthlyPreTax   = annualPreTax / 12;
   const monthlyTakeHome = (salary - annualPreTax - taxWith) / 12;
+  const pct = taxNo > 0 ? annualTaxSaving / taxNo * 100 : 0;
 
-  // UPDATE UI
-  document.getElementById('r-salary').textContent   = fmt(salary);
-  document.getElementById('r-taxable').textContent  = fmt(taxableIncome);
-  document.getElementById('r-taxNo').textContent    = fmt(taxNo);
-  document.getElementById('r-taxWith').textContent  = fmt(taxWith);
-  document.getElementById('r-taxSaving').textContent  = fmt(annualTaxSaving);
-  document.getElementById('r-totalSaving').textContent = fmt(totalTaxSaving);
-  document.getElementById('r-termLabel').textContent = `Over ${term} year${term > 1 ? 's' : ''}`;
-  document.getElementById('r-monthly').textContent   = fmt(monthlyPreTax) + '/mo';
-  document.getElementById('r-takehome').textContent  = fmt(monthlyTakeHome) + '/mo';
+  // SUMMARY
+  setNum('r-taxSaving', annualTaxSaving);
+  setNum('m-saving', annualTaxSaving);
+  setNum('r-totalSaving', totalTaxSaving);
+  $('r-termLabel').textContent = `saved over ${term} year${term > 1 ? 's' : ''}`;
+  $('r-pct').textContent = pct.toFixed(1) + '%';
+  $('r-pctBar').style.width = Math.max(0, Math.min(100, pct)) + '%';
+  setNum('r-salary', salary);
+  setNum('r-taxable', taxableIncome);
+  setNum('r-taxNo', taxNo);
+  setNum('r-taxWith', taxWith);
+  setNum('r-monthly', monthlyPreTax, '/mo');
+  setNum('r-takehome', monthlyTakeHome, '/mo');
+  $('r-running').textContent = fmt(annualRunning);
 
-  document.getElementById('table-no').innerHTML = `
+  const pill = $('fbtPill');
+  pill.textContent = exempt ? '✓ FBT exempt' : '⚠ Over LCT threshold';
+  pill.classList.toggle('over', !exempt);
+
+  // TABLES
+  $('table-no').innerHTML = `
     <tr><td>Income tax + Medicare</td><td>${fmt(taxNo)}</td></tr>
-    <tr><td>Car loan repayments (after-tax)</td><td>${fmt(annualLoanRepay)}</td></tr>
-    <tr><td>Running costs (after-tax)</td><td>${fmt(annualRunning)}</td></tr>
-    <tr class="highlight"><td><strong>Total annual cost</strong></td><td><strong>${fmt(totalCostNo)}</strong></td></tr>`;
-
-  document.getElementById('table-yes').innerHTML = `
+    <tr><td>Loan repayments (after tax)</td><td>${fmt(annualLoanRepay)}</td></tr>
+    <tr><td>Running costs (after tax)</td><td>${fmt(annualRunning)}</td></tr>
+    <tr class="highlight"><td>Total annual cost</td><td>${fmt(totalCostNo)}</td></tr>`;
+  $('table-yes').innerHTML = `
     <tr><td>Income tax + Medicare</td><td>${fmt(taxWith)}</td></tr>
     <tr><td>Lease repayments (pre-tax)</td><td>${fmt(annualLeaseRepay)}</td></tr>
     <tr><td>Running costs (pre-tax)</td><td>${fmt(annualRunning)}</td></tr>
-    <tr><td>FBT payable</td><td>${carPrice <= 89332 ? '<span style="color:var(--accent);font-weight:600">$0 ⚡</span>' : fmt(fbt)}</td></tr>
-    <tr class="highlight"><td><strong>Total annual cost</strong></td><td><strong>${fmt(totalCostWith)}</strong></td></tr>`;
+    <tr><td>FBT payable</td><td>${exempt ? '<span class="zero">$0 ⚡</span>' : fmt(fbt)}</td></tr>
+    <tr class="highlight"><td>Total annual cost</td><td>${fmt(totalCostWith)}</td></tr>`;
 
-  // BAR CHART
+  // BARS
   const maxVal = Math.max(totalCostNo, totalCostWith) * 1.05;
   const bars = [
-    { label:'Without Lease',     value:totalCostNo,  color:'var(--warn)' },
-    { label:'With Novated Lease',value:totalCostWith, color:'var(--accent)' },
-    { label:'Tax (no lease)',    value:taxNo,         color:'#c07020' },
-    { label:'Tax (with lease)',  value:taxWith,       color:'var(--accent2)' },
+    { label: 'Standard car loan', value: totalCostNo,   color: 'var(--warn)' },
+    { label: 'Novated lease',     value: totalCostWith, color: 'var(--accent)' },
+    { label: 'Tax (no lease)',    value: taxNo,         color: 'var(--amber)' },
+    { label: 'Tax (with lease)',  value: taxWith,       color: 'var(--blue)' },
   ];
-  const chart = document.getElementById('barChart');
-  chart.innerHTML = `<div style="font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text-soft);font-family:'DM Mono',monospace">ANNUAL COST COMPARISON</div>`;
-  bars.forEach(d => {
-    const pct = (d.value / maxVal * 100).toFixed(1);
-    chart.innerHTML += `<div class="bar-row">
-      <div class="bar-name">${d.label}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${d.color}"></div></div>
-      <div class="bar-val">${fmt(d.value)}</div>
-    </div>`;
+  const chart = $('barChart');
+  if (!chart.dataset.built) {
+    chart.innerHTML = '<div class="bars-title">Annual cost comparison</div>' + bars.map((d, i) => `
+      <div class="bar-row">
+        <div class="bar-name"><i style="background:${d.color}"></i>${d.label}</div>
+        <div class="bar-track"><div class="bar-fill" id="bar-${i}" style="background:${d.color}"></div></div>
+        <div class="bar-val num" id="barv-${i}">—</div>
+      </div>`).join('');
+    chart.dataset.built = '1';
+  }
+  bars.forEach((d, i) => {
+    $('bar-' + i).style.width = (d.value / maxVal * 100).toFixed(1) + '%';
+    $('barv-' + i).textContent = fmt(d.value);
   });
 
   // VERDICT
-  const verdict = document.getElementById('verdict-box');
-  const pctSaving = (annualTaxSaving / taxNo * 100).toFixed(1);
-  if (carPrice > 89332) {
-    verdict.className = 'verdict bad';
-    document.getElementById('v-emoji').textContent = '⚠️';
-    document.getElementById('v-title').textContent = 'Over FBT Threshold!';
-    document.getElementById('v-body').textContent  = `This vehicle ($${carPrice.toLocaleString()}) exceeds the $89,332 LCT threshold and may not qualify for the full FBT exemption. Consider a vehicle under this amount for maximum savings.`;
+  const box = $('verdict-box');
+  const pctSaving = pct.toFixed(1);
+  let cls, icon, title, body;
+  if (!exempt) {
+    cls = 'bad'; icon = '⚠️'; title = 'Over the FBT threshold';
+    body = `This vehicle (${fmt(carPrice)}) exceeds the $89,332 LCT threshold and may not qualify for the full FBT exemption. Consider a vehicle under this amount for maximum savings.`;
   } else if (annualTaxSaving >= 8000) {
-    verdict.className = 'verdict good';
-    document.getElementById('v-emoji').textContent = '🚀';
-    document.getElementById('v-title').textContent = 'Excellent savings — highly recommended!';
-    document.getElementById('v-body').textContent  = `You'll save ${fmt(annualTaxSaving)}/year (${pctSaving}% of your tax bill) — ${fmt(totalTaxSaving)} over the lease term. At your income level, the EV FBT exemption combined with pre-tax packaging creates substantial benefits well worth doing.`;
+    cls = 'good'; icon = '🚀'; title = 'Excellent savings — highly recommended';
+    body = `You'll save ${fmt(annualTaxSaving)}/year (${pctSaving}% of your tax bill) — ${fmt(totalTaxSaving)} over the lease term. At your income, the EV FBT exemption plus pre-tax packaging delivers substantial benefits.`;
   } else if (annualTaxSaving >= 4000) {
-    verdict.className = 'verdict good';
-    document.getElementById('v-emoji').textContent = '✅';
-    document.getElementById('v-title').textContent = 'Worth it — solid tax savings';
-    document.getElementById('v-body').textContent  = `You save ${fmt(annualTaxSaving)}/year in tax — ${fmt(totalTaxSaving)} over ${term} years. The EV FBT exemption makes this significantly better than leasing a petrol car. Factor in residual value risk at lease end.`;
+    cls = 'good'; icon = '✅'; title = 'Worth it — solid tax savings';
+    body = `You save ${fmt(annualTaxSaving)}/year in tax — ${fmt(totalTaxSaving)} over ${term} years. The EV FBT exemption makes this much better than leasing a petrol car. Factor in residual value risk at lease end.`;
   } else if (annualTaxSaving >= 1500) {
-    verdict.className = 'verdict ok';
-    document.getElementById('v-emoji').textContent = '🤔';
-    document.getElementById('v-title').textContent = 'Moderate benefit — review carefully';
-    document.getElementById('v-body').textContent  = `Saving ${fmt(annualTaxSaving)}/year is real but modest. The pre-tax convenience and FBT exemption still help, but compare total cost-of-ownership carefully vs buying outright.`;
+    cls = 'ok'; icon = '🤔'; title = 'Moderate benefit — review carefully';
+    body = `Saving ${fmt(annualTaxSaving)}/year is real but modest. The pre-tax convenience and FBT exemption still help, but compare total cost of ownership against buying outright.`;
   } else {
-    verdict.className = 'verdict bad';
-    document.getElementById('v-emoji').textContent = '❌';
-    document.getElementById('v-title').textContent = 'Limited benefit at this income/price';
-    document.getElementById('v-body').textContent  = `Your tax saving of ${fmt(annualTaxSaving)}/year is quite low. Consider a different vehicle or consult a leasing specialist.`;
+    cls = 'bad'; icon = '❌'; title = 'Limited benefit at this income / price';
+    body = `Your tax saving of ${fmt(annualTaxSaving)}/year is quite low. Consider a different vehicle or talk to a leasing specialist.`;
   }
+  box.className = 'verdict ' + cls;
+  $('v-emoji').textContent = icon;
+  $('v-title').textContent = title;
+  $('v-body').textContent = body;
 }
 
+// ── MOBILE RESULT BAR ──────────────────────────────────────────────
+const mbar = $('mbar');
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    entries.forEach(en => mbar.classList.toggle('hide', en.isIntersecting));
+  }, { threshold: 0.15 }).observe($('results'));
+}
+
+// ── INIT ───────────────────────────────────────────────────────────
+document.querySelectorAll('input[type="range"]').forEach(paintRange);
 calculate();
 </script>
 </body>

@@ -15,8 +15,9 @@ A beautiful, interactive calculator to determine whether novated leasing an elec
 - **Side-by-side Comparison** — Novated lease vs standard car loan
 - **Verdict Engine** — Clear 🚀 / ✅ / 🤔 / ❌ recommendation
 - **8 EV Presets** — Tesla, BYD, Hyundai, Kia, Polestar, Mercedes, BMW
-- **🌀 Tubes Cursor Effect** — Interactive 3D animated cursor by [Kevin Levron](https://codepen.io/soju22/pen/qEbdVjK) (CC BY-NC-SA 4.0)
-- **Light / Dark Mode** — System theme detection + manual toggle
+- **Live results panel** — Sticky savings summary on desktop, floating result bar on mobile
+- **Light / Dark Mode** — Light by default, manual toggle (remembered once chosen)
+- **Classic version** — The previous design is kept at [`classic.html`](https://schoi0209.github.io/EV-Novated-Lease-Calculator/classic.html)
 
 ## Supported EVs
 
@@ -33,9 +34,12 @@ A beautiful, interactive calculator to determine whether novated leasing an elec
 
 ## Credits
 
-- Tubes Cursor: [Kevin Levron](https://codepen.io/soju22/pen/qEbdVjK) via [threejs-components](https://github.com/klevron/threejs-components) · Licence CC BY-NC-SA 4.0
 - Tax data: [ATO 2024–25](https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents)
 
 ## Disclaimer
 
 For indicative purposes only. Not financial advice. Consult a qualified financial adviser before entering a novated lease.
+
+---
+
+Made by SunnyApps. All rights reserved.
